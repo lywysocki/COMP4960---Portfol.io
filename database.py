@@ -41,11 +41,15 @@ stocks = [
 ]
 
 
-ticker = input("Enter the stock ticker: ")
-while ticker not in stocks:
-    ticker = input("Please enter a valid stock: ")
+# Function to obtain user input
+def get_input():
+    ticker = input("Enter the stock ticker: ")
+    while ticker not in stocks:
+        ticker = input("Please enter a valid stock: ")
 
-historical_date = input("What date would you like data to date back to (DD-MM-YYYY): ")
+    historical_date = input("What date would you like data to date back to (DD-MM-YYYY): ")
+
+    return ticker, historical_date
 
 # Function to retrieve stock prices for the stock input from the user
 # stock param is the ticker input from the user
@@ -103,4 +107,5 @@ def retrieve_stock_prices(stock, start_date):
     print(df)
 
 
-retrieve_stock_prices(ticker, historical_date)
+stock_ticker, date_back = get_input()
+retrieve_stock_prices(stock_ticker, date_back)
