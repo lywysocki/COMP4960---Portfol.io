@@ -6,6 +6,46 @@ import time
 # Connect to Finnhub.io with API key
 finnhub_client = finnhub.Client(api_key="cg7of21r01qgl488q6jgcg7of21r01qgl488q6k0")
 
+# List of stock tickers representing stocks in DOW30
+stocks = [
+    'AXP',
+    'AMGN',
+    'AAPL',
+    'BA',
+    'CAT',
+    'CSCO',
+    'CVS',
+    'GS',
+    'HD',
+    'HON',
+    'IBM',
+    'INTC',
+    'JNJ',
+    'KO',
+    'JPM',
+    'MCD',
+    'MMM',
+    'MRK',
+    'MSFT',
+    'NKE',
+    'PG',
+    'TRV',
+    'UNH',
+    'CRM',
+    'VZ',
+    'V',
+    'WBA',
+    'WMT',
+    'DIS',
+    'DOW'
+]
+
+
+ticker = input("Enter the stock ticker: ")
+while ticker not in stocks:
+    ticker = input("Please enter a valid stock: ")
+
+historical_date = input("What date would you like data to date back to (DD-MM-YYYY): ")
 
 # Function to retrieve stock prices for the stock input from the user
 # stock param is the ticker input from the user
@@ -47,7 +87,6 @@ def retrieve_stock_prices(stock, start_date):
         date_to_add = date_string.split(' ')
         dates += [date_to_add[0]]
 
-
     # create dictionary to populate dataframe
     data = {
         'Date': dates,
@@ -63,4 +102,5 @@ def retrieve_stock_prices(stock, start_date):
 
     print(df)
 
-retrieve_stock_prices('AAPL', '01-01-2018')
+
+retrieve_stock_prices(ticker, historical_date)
