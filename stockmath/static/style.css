@@ -1,0 +1,77 @@
+.flex-container {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+}
+
+.base1 {
+    position: absolute;
+    margin: .05% .05% .05% .05%;
+
+    box-shadow: 2px 2px 5px grey;
+    border-radius: 5px;
+
+    width:25%;
+    height:97%;
+    background-color: lightblue
+}
+
+.base2 {
+    position: absolute;
+    margin: .05% .05% .05% .05%;
+    left: 26%;
+
+    box-shadow: 2px 2px 5px grey;
+    border-radius: 5px;
+
+    width:73%;
+    height:60%;
+
+    background-color: lightblue
+}
+
+.base3 {
+    position: absolute;
+    margin: .05% .05% .05% .05%;
+    left:26%;
+    top:62%;
+
+    box-shadow: 2px 2px 5px grey;
+    border-radius: 5px;
+    width:73%;
+    height:36%;
+    background-color: lightblue
+}
+
+.ticker-in {
+    position: relative;
+    width: 94%;
+    height: 15%;
+}
+
+.checkbox {
+    position: relative;
+    width: 44%;
+    height: 40%;
+}
+
+.prediction {
+    position: relative;
+    width: 94%;
+    height: 35%;
+}
+
+.style1 {
+    float: left;
+    margin: 3% 3% 3% 3%;
+    background-color: lightcoral;
+    border-radius: 5px;
+}
+
+* {
+    background-color: lightgray;
+}
