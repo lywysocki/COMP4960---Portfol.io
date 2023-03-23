@@ -1,7 +1,9 @@
 import finnhub
 import pandas as pd
 from datetime import datetime
+import datetime
 import time
+import plotly.express as px
 
 # Connect to Finnhub.io with API key
 finnhub_client = finnhub.Client(api_key="cg7of21r01qgl488q6jgcg7of21r01qgl488q6k0")
@@ -41,6 +43,39 @@ stocks = [
 ]
 
 
+# Function to check the input date is valid
+def is_valid_date(date):
+    # lists containing months and there relative amount of days
+    days31 = [1, 3, 5, 7, 8, 10, 12]
+    days30 = [1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+    # pointers for day, month, year, and current year
+    date_list = date.split('-')
+    day = date_list[0]
+    month = date_list[1]
+    year = date_list[2]
+    curr_date = datetime.date.today()
+    curr_year = curr_date.year
+
+    # check to ensure valid date
+    if not day.isnumeric() or not month.isnumeric() or not year.isnumeric():
+        return False
+    if int(day) > 31:
+        return False
+    if int(month) > 12:
+        return False
+    if int(year) > int(curr_year):
+        return False
+    if int(day) == 31 and int(month) not in days31:
+        return False
+    if int(day) == 30 and int(month) not in days30:
+        return False
+    if int(day) == 29 and int(month) == 2 and int(year) % 4 != 0:
+        return False
+
+    return True
+
+
 # Function to obtain user input
 def get_input():
     ticker = input("Enter the stock ticker: ")
@@ -49,7 +84,12 @@ def get_input():
 
     historical_date = input("What date would you like data to date back to (DD-MM-YYYY): ")
 
+    while not is_valid_date(historical_date):
+        historical_date = input("Please enter a valid date (DD-MM-YYYY): ")
+        is_valid_date(historical_date)
+
     return ticker, historical_date
+
 
 # Function to retrieve stock prices for the stock input from the user
 # stock param is the ticker input from the user
@@ -104,8 +144,29 @@ def retrieve_stock_prices(stock, start_date):
     # create dataframe with the retrieved data
     df = pd.DataFrame(data)
 
-    print(df)
+    fig = px.line(df, x="Date", y="Close", title="Test")
+    fig.show()
 
 
-stock_ticker, date_back = get_input()
-retrieve_stock_prices(stock_ticker, date_back)
+# retrieve_stock_prices('AAPL', '01-01-2018')
+
+
+# Code messing around with retrieving financial information
+# stock_ticker, date_back = get_input()
+# retrieve_stock_prices(stock_ticker, date_back)
+#
+# eps = finnhub_client.company_basic_financials('AAPL', 'all')['series']['annual']['eps']
+# print(eps[0])
+#
+# test = finnhub_client.company_basic_financials('AAPL', 'all')['series']['annual']['pe']
+# print(test[0])
+
+# financials = finnhub_client.financials_reported(symbol="AAPL")['data'][0].get('report').get('ic')
+# outstanding_shares = 0
+#
+# for x in financials:
+#     if x["concept"] == 'us-gaap_WeightedAverageNumberOfSharesOutstandingBasic':
+#         outstanding_shares = int(x.get('value'))
+#
+# print(outstanding_shares * 150.77)
+
