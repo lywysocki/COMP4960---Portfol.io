@@ -115,23 +115,40 @@ def retrieve_stock_prices(stock, start_date):
     fig.show()
 
 
-# Code messing around with retrieving financial information
+# function to display current day market data to the user
+def market_data():
+    # 52WeekHigh
+    # 52WeekLow
+    # marketCapitalization
+    # peNormalizedAnnual
+    # dividendPerShareAnnual
+    # Open
+    # High
+    # Low
 
-# stock_ticker, date_back = get_input()
-# retrieve_stock_prices(stock_ticker, date_back)
-#
-# eps = finnhub_client.company_basic_financials('AAPL', 'all')['series']['annual']['eps']
-# print(eps[0])
-#
-# test = finnhub_client.company_basic_financials('AAPL', 'all')['series']['annual']['pe']
-# print(test[0])
+    open = finnhub_client.quote('AAPL')['o']
+    high = finnhub_client.quote('AAPL')['h']
+    low = finnhub_client.quote('AAPL')['l']
+    year_high = finnhub_client.company_basic_financials('AAPL', 'all')['metric'].get('52WeekHigh')
+    year_low = finnhub_client.company_basic_financials('AAPL', 'all')['metric'].get('52WeekLow')
+    market_cap = finnhub_client.company_basic_financials('AAPL', 'all')['metric'].get('marketCapitalization') * 1000000
+    pe = finnhub_client.company_basic_financials('AAPL', 'all')['metric'].get('peNormalizedAnnual')
+    dividend = finnhub_client.company_basic_financials('AAPL', 'all')['metric'].get('dividendPerShareAnnual')
 
-# financials = finnhub_client.financials_reported(symbol="AAPL")['data'][0].get('report').get('ic')
-# outstanding_shares = 0
-#
-# for x in financials:
-#     if x["concept"] == 'us-gaap_WeightedAverageNumberOfSharesOutstandingBasic':
-#         outstanding_shares = int(x.get('value'))
-#
-# print(outstanding_shares * 150.77)
+    data = {
+        'Open': open,
+        'High': high,
+        'Low': low,
+        'Mkt Cap': market_cap,
+        'P/E Ratio': pe,
+        'Div Yield': dividend,
+        '52-wk High': year_high,
+        '52-wk Low': year_low
+    }
 
+    # df = pd.DataFrame(data)
+
+    print(data)
+
+
+market_data()
