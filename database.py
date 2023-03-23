@@ -4,43 +4,10 @@ from datetime import datetime
 import datetime
 import time
 import plotly.express as px
+from stock_tickers import stock_tickers
 
 # Connect to Finnhub.io with API key
 finnhub_client = finnhub.Client(api_key="cg7of21r01qgl488q6jgcg7of21r01qgl488q6k0")
-
-# List of stock tickers representing stocks in DOW30
-stocks = [
-    'AXP',
-    'AMGN',
-    'AAPL',
-    'BA',
-    'CAT',
-    'CSCO',
-    'CVS',
-    'GS',
-    'HD',
-    'HON',
-    'IBM',
-    'INTC',
-    'JNJ',
-    'KO',
-    'JPM',
-    'MCD',
-    'MMM',
-    'MRK',
-    'MSFT',
-    'NKE',
-    'PG',
-    'TRV',
-    'UNH',
-    'CRM',
-    'VZ',
-    'V',
-    'WBA',
-    'WMT',
-    'DIS',
-    'DOW'
-]
 
 
 # Function to check the input date is valid
@@ -79,7 +46,7 @@ def is_valid_date(date):
 # Function to obtain user input
 def get_input():
     ticker = input("Enter the stock ticker: ")
-    while ticker not in stocks:
+    while ticker not in stock_tickers:
         ticker = input("Please enter a valid stock: ")
 
     historical_date = input("What date would you like data to date back to (DD-MM-YYYY): ")
@@ -148,10 +115,8 @@ def retrieve_stock_prices(stock, start_date):
     fig.show()
 
 
-# retrieve_stock_prices('AAPL', '01-01-2018')
-
-
 # Code messing around with retrieving financial information
+
 # stock_ticker, date_back = get_input()
 # retrieve_stock_prices(stock_ticker, date_back)
 #
