@@ -1,9 +1,8 @@
 import finnhub
 import pandas as pd
 from datetime import datetime
-import datetime
+import datetime as dt
 import time
-import plotly.express as px
 from stock_tickers import stock_tickers
 
 # Connect to Finnhub.io with API key
@@ -21,7 +20,7 @@ def is_valid_date(date):
     day = date_list[0]
     month = date_list[1]
     year = date_list[2]
-    curr_date = datetime.date.today()
+    curr_date = dt.date.today()
     curr_year = curr_date.year
 
     # check to ensure valid date
@@ -37,7 +36,7 @@ def is_valid_date(date):
         return False
     if int(day) == 30 and int(month) not in days30:
         return False
-    if int(day) == 29 and int(month) == 2 and int(year) % 4 != 0:
+    if int(day) == 29 and int(month) not in days30 and int(year) % 4 != 0:
         return False
 
     return True
@@ -47,7 +46,7 @@ def is_valid_date(date):
 def get_input():
     ticker = input("Enter the stock ticker: ")
     while ticker not in stock_tickers:
-        ticker = input("Please enter a valid stock: ")
+        ticker = input("We do not have data for that stock in our  : ")
 
     historical_date = input("What date would you like data to date back to (DD-MM-YYYY): ")
 
@@ -83,62 +82,80 @@ def retrieve_stock_prices(stock, start_date):
     # get current time timestamp
     current_ts = int(time.mktime(current_day.timetuple()))
 
-    # create lists to store data retrieved from API calls
-    open = finnhub_client.stock_candles(stock, 'D', start_ts, current_ts)['o']
-    close = finnhub_client.stock_candles(stock, 'D', start_ts, current_ts)['c']
-    high = finnhub_client.stock_candles(stock, 'D', start_ts, current_ts)['h']
-    low = finnhub_client.stock_candles(stock, 'D', start_ts, current_ts)['l']
-    volume = finnhub_client.stock_candles(stock, 'D', start_ts, current_ts)['v']
-    ts = finnhub_client.stock_candles(stock, 'D', start_ts, current_ts)['t']
+    # make an API call to gather necessary data
+    stock_price_data = finnhub_client.stock_candles(stock, 'D', start_ts, current_ts)
 
-    # convert timestamps into dates
-    dates = []
-    for timestamp in ts:
-        date_string = str(datetime.fromtimestamp(timestamp))
-        date_to_add = date_string.split(' ')
-        dates += [date_to_add[0]]
+    # create lists to store data retrieved from API call
+    try:
+        open = stock_price_data['o']
+        close = stock_price_data['c']
+        high = stock_price_data['h']
+        low = stock_price_data['l']
+        # volume = stock_price_data['v']
+        ts = stock_price_data['t']
 
-    # create dictionary to populate dataframe
-    data = {
-        'Date': dates,
-        'Open': open,
-        'Close': close,
-        'High': high,
-        'Low': low,
-        'Volume': volume
-    }
+        # lists to contain date breakdowns
+        days = []
+        months = []
+        years = []
 
-    # create dataframe with the retrieved data
-    df = pd.DataFrame(data)
+        # convert timestamps into dates
+        dates = []
+        for timestamp in ts:
+            date_string = str(datetime.fromtimestamp(timestamp))
+            date_to_add = date_string.split(' ')
+            sub_date_to_add = date_to_add[0].split('-')
+            years += [sub_date_to_add[0]]
+            months += [sub_date_to_add[1]]
+            days += [sub_date_to_add[2]]
 
-    fig = px.line(df, x="Date", y="Close", title="Test")
-    fig.show()
+        # create dictionary to populate dataframe
+        data = {
+            'Year': years,
+            'Month': months,
+            'Day': days,
+            'Open': open,
+            'Close': close,
+            'High': high,
+            'Low': low
+            # 'Volume': volume
+        }
+
+        # create dataframe with the retrieved data
+        df = pd.DataFrame(data)
+
+        return df
+    except KeyError:
+        print(f'Error Caught. SKIPPING {stock}. Index: {stock_tickers.index(stock)}')
+        pass
+
+    pass
+    # fig = px.line(df, x="Date", y="Close", title="Test")
+    # fig.show()
 
 
 # function to display current day market data to the user
-def market_data():
-    # 52WeekHigh
-    # 52WeekLow
-    # marketCapitalization
-    # peNormalizedAnnual
-    # dividendPerShareAnnual
-    # Open
-    # High
-    # Low
+def market_data(stock):
+    # make API calls for each method needed to retrieve data
+    quote = finnhub_client.quote(stock)
+    financials = finnhub_client.company_basic_financials(stock, 'all')['metric']
 
-    open = finnhub_client.quote('AAPL')['o']
-    high = finnhub_client.quote('AAPL')['h']
-    low = finnhub_client.quote('AAPL')['l']
-    year_high = finnhub_client.company_basic_financials('AAPL', 'all')['metric'].get('52WeekHigh')
-    year_low = finnhub_client.company_basic_financials('AAPL', 'all')['metric'].get('52WeekLow')
-    market_cap = finnhub_client.company_basic_financials('AAPL', 'all')['metric'].get('marketCapitalization') * 1000000
-    pe = finnhub_client.company_basic_financials('AAPL', 'all')['metric'].get('peNormalizedAnnual')
-    dividend = finnhub_client.company_basic_financials('AAPL', 'all')['metric'].get('dividendPerShareAnnual')
+    # pointers to store all necessary market data for a stock
+    open = quote['o']
+    high = quote['h']
+    low = quote['l']
+    curr = quote['c']
+    year_high = financials.get('52WeekHigh')
+    year_low = financials.get('52WeekLow')
+    market_cap = financials.get('marketCapitalization')
+    pe = financials.get('peNormalizedAnnual')
+    dividend = financials.get('dividendPerShareAnnual')
 
     data = {
         'Open': open,
         'High': high,
         'Low': low,
+        'Current Price': curr,
         'Mkt Cap': market_cap,
         'P/E Ratio': pe,
         'Div Yield': dividend,
@@ -146,9 +163,6 @@ def market_data():
         '52-wk Low': year_low
     }
 
-    # df = pd.DataFrame(data)
+    df = pd.DataFrame(data, index=[0])
 
-    print(data)
-
-
-market_data()
+    return df
