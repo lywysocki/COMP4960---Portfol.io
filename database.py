@@ -82,6 +82,7 @@ def get_input():
 # for i in range (len(mydf)):
 #   each_close_price = mydf.iloc[i]['Close']
 #   print(each_close_price)
+# df = df[['Year', 'Month', 'Day', 'Close']].copy()
 def retrieve_stock_prices(stock, start_date):
     # split the input date for month, day, year retrieval
     date_string = start_date.split('-')
