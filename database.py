@@ -112,23 +112,15 @@ def retrieve_stock_prices(stock, start_date):
         close = stock_price_data['c']
         high = stock_price_data['h']
         low = stock_price_data['l']
-        # volume = stock_price_data['v']
         ts = stock_price_data['t']
 
         # lists to contain date breakdowns
-        days = []
-        months = []
-        years = []
 
         # convert timestamps into dates
         dates = []
         for timestamp in ts:
             date_string = str(datetime.fromtimestamp(timestamp))
             date_to_add = date_string.split(' ')
-            # sub_date_to_add = date_to_add[0].split('-')
-            # years += [sub_date_to_add[0]]
-            # months += [sub_date_to_add[1]]
-            # days += [sub_date_to_add[2]]
             dates += [date_to_add[0]]
 
         # create dictionary to populate dataframe
@@ -138,7 +130,6 @@ def retrieve_stock_prices(stock, start_date):
             'Close': close,
             'High': high,
             'Low': low
-            # 'Volume': volume
         }
 
         # create dataframe with the retrieved data
@@ -155,6 +146,7 @@ def retrieve_stock_prices(stock, start_date):
 
 
 # function to display current day market data to the user
+# this function will be called to display market information in our UI underneath the graph
 def market_data(stock):
     # make API calls for each method needed to retrieve data
     quote = finnhub_client.quote(stock)
@@ -188,4 +180,71 @@ def market_data(stock):
     return df
 
 
-print(retrieve_stock_prices('AAPL', '01-01-2018')['Close'])
+# function to write retrieved data to database
+def write_to_db(stock, start_date):
+    # split the input date for month, day, year retrieval
+    date_string = start_date.split('-')
+
+    # split the string to get int values for month, day, year
+    start_month = int(date_string[0])
+    start_day = int(date_string[1])
+    start_year = int(date_string[2])
+
+    # convert start_date to datetime
+    start_dt = datetime(start_year, start_day, start_month, 0, 0)
+
+    # store start_date as UNIX timestamp
+    start_ts = int(time.mktime(start_dt.timetuple()))
+
+    # get current time
+    current_day = datetime.today()
+
+    # get current time timestamp
+    current_ts = int(time.mktime(current_day.timetuple()))
+
+    # make an API call to gather necessary data
+    stock_price_data = finnhub_client.stock_candles(stock, 'D', start_ts, current_ts)
+
+    # create lists to store data retrieved from API call
+    try:
+        open = stock_price_data['o']
+        close = stock_price_data['c']
+        high = stock_price_data['h']
+        low = stock_price_data['l']
+        ts = stock_price_data['t']
+
+        # lists to contain date breakdowns
+        days = []
+        months = []
+        years = []
+
+        # convert timestamps into day, month, year
+        for timestamp in ts:
+            date_string = str(datetime.fromtimestamp(timestamp))
+            date_to_add = date_string.split(' ')
+            sub_date_to_add = date_to_add[0].split('-')
+            years += [sub_date_to_add[0]]
+            months += [sub_date_to_add[1]]
+            days += [sub_date_to_add[2]]
+
+        # create dictionary to populate dataframe
+        data = {
+            'Year': years,
+            'Month': months,
+            'Day': days,
+            'Open': open,
+            'Close': close,
+            'High': high,
+            'Low': low
+        }
+
+        # create dataframe with the retrieved data
+        df = pd.DataFrame(data)
+
+        return df
+    except KeyError:
+        print(f'Error Caught. SKIPPING {stock}. Index: {stock_tickers.index(stock)}')
+        pass
+
+    pass
+
