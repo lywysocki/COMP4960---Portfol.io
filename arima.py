@@ -1,14 +1,22 @@
 import pandas as pd
 import numpy as np
+from database import retrieve_stock_prices
 import plotly.express as px
+import matplotlib.pyplot as plt
+from statsmodels.tsa.arima_model import ARIMA
+from statsmodels.tsa.stattools import adfuller
 
-#download stock price data from github repository
-df = pd.read_csv("https://github.com/lywysocki/COMP4960---Portfol.io/blob/c503849912586b67eac84e1c580be5deb19dc57e/1%20Year%20Historical%20Financials/AAPL_Financials.csv")
-df.head()
+# gets dataframe for a specific stock
+df = retrieve_stock_prices("META", "03-03-2023")
 
-#convert dataset into time series
-df.index = pd.to_datetime(df["Date"])
-df.head()
-df.index
-y = np.log(df["Close Price"])
-y.plot()
+# df = df[['Year', 'Month', 'Day', 'Close']].copy()
+
+# print (df)
+
+result = adfuller(df.Close.dropna())
+print(f"ADF Stat: {result[0]}")
+print(f"p-value: {result[1]}")
+
+
+
+# print(df.iloc[0]['Close'])
