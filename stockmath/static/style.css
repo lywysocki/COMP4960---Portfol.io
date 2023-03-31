@@ -1,23 +1,29 @@
-.flex-container {
+html {
+    font-size: 16pt;
+    font-family: 'Times New Roman', Times, serif;
 
+}
+
+body {
+    background-color: green;
+}
+
+.form_flex {
     display: flex;
-    flex-direction: row;
+    flex-flow: row wrap;    
     justify-content: flex-start;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    align-content: flex-start;
 }
 
 .base1 {
     position: absolute;
     margin: .05% .05% .05% .05%;
 
-    box-shadow: 2px 2px 5px grey;
+    box-shadow: 2px 2px 5px black;
     border-radius: 5px;
 
     width:25%;
     height:97%;
-    background-color: lightblue
+    background-color: grey
 }
 
 .base2 {
@@ -25,13 +31,13 @@
     margin: .05% .05% .05% .05%;
     left: 26%;
 
-    box-shadow: 2px 2px 5px grey;
+    box-shadow: 2px 2px 5px black;
     border-radius: 5px;
 
     width:73%;
     height:60%;
 
-    background-color: lightblue
+    background-color: grey
 }
 
 .base3 {
@@ -40,38 +46,47 @@
     left:26%;
     top:62%;
 
-    box-shadow: 2px 2px 5px grey;
+    box-shadow: 2px 2px 5px black;
     border-radius: 5px;
-    width:73%;
+    width:75%;
     height:36%;
-    background-color: lightblue
+    background-color: grey
 }
 
 .ticker-in {
     position: relative;
-    width: 94%;
+    width: 95%;
     height: 15%;
 }
 
 .checkbox {
     position: relative;
-    width: 44%;
-    height: 40%;
+    width: 95%;
+    
 }
 
 .prediction {
     position: relative;
     width: 94%;
-    height: 35%;
+    height: 20%;
 }
 
 .style1 {
     float: left;
     margin: 3% 3% 3% 3%;
-    background-color: lightcoral;
+    background-color: green;
     border-radius: 5px;
 }
 
-* {
-    background-color: lightgray;
+.labelstyle{
+    position: relative;
+    border-width: 2px;
+    border-color: black;
+    padding-left: 1%
+}
+
+.inputstyle {
+    position: relative;
+    border-width: 2px;
+    border-color: black
 }
