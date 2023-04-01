@@ -1,4 +1,3 @@
-import finnhub
 import pandas as pd
 import datetime
 import time
@@ -17,40 +16,6 @@ unix_now = int(time.mktime(now.timetuple()))
 
 def time_offset(date, num_days):
     return date - num_days*86400
-
-
-# ################ FOR TESTING ################ #
-def get_ticker_df(ticker):
-    finnhub_client = finnhub.Client(api_key="cfj73ghr01que34nr220cfj73ghr01que34nr22g")
-
-    #df = pd.DataFrame(finnhub_client.stock_candles(symbol, 'D', time_offset(unix_now, 730), unix_now))
-    df = pd.DataFrame(finnhub_client.stock_candles(ticker, 'D', time_offset(unix_now, 1200), unix_now))
-
-    years = []
-    months = []
-    days = []
-
-    for timestamp in df["t"]:
-        date_string = str(datetime.datetime.fromtimestamp(timestamp))
-        date_to_add = date_string.split(' ')
-        sub_date_to_add = date_to_add[0].split('-')
-        years += [sub_date_to_add[0]]
-        months += [sub_date_to_add[1]]
-        days += [sub_date_to_add[2]]
-
-    data = {
-        'Year': years,
-        'Month': months,
-        'Day': days,
-        'Close': df["c"]
-    }
-
-    return pd.DataFrame(data)
-
-
-# #################### END TESTING ########################### #
-#tickerdf = get_ticker_df("AAPL")
-
 
 # dataframe length must be greater than requested num_days
 def trading_days_ago(dataframe, num_days):
