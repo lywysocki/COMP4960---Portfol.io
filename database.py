@@ -198,5 +198,3 @@ def write_to_db(stock, start_date):
         pass
 
     pass
-
-get_input()
