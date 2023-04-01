@@ -1,8 +1,8 @@
-
 import finnhub
 import pandas as pd
 import datetime
 import time
+from query import fetch_data_from_date
 
 # dataframe print formatting
 pd.set_option('display.max_columns', None)
@@ -130,7 +130,7 @@ def future_slope(sma_cross_result, ema50_slope, ema200_slope):
 def percent_change(ticker, from_date_offset, to_date_offset):
 
     # replace with database code
-    tickerdf = get_ticker_df(ticker)
+    tickerdf = fetch_data_from_date(ticker, '03-01-2020')
 
     index = len(tickerdf)-1  # last index of tickerdf, also most recent date
 
@@ -143,7 +143,7 @@ def percent_change(ticker, from_date_offset, to_date_offset):
 # This returns the future expected slope when given a ticker
 # SLOPE FOR NEXT x DAYS
 def main(ticker):
-    tickerdf = get_ticker_df(ticker)
+    tickerdf = fetch_data_from_date(ticker, '03-01-2020')
 
     # OFFSET FOR TESTING PURPOSES, represents
     offset = 250

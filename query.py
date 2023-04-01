@@ -60,7 +60,6 @@ def fetch_data_from_date(stock, date):
         if data_year == year and data_month == month and data_day == day:
             # store the index
             index = results.index(data)
-            print(index)
             break
 
     # pointers for each key's value in the desired data dictionary
@@ -78,10 +77,10 @@ def fetch_data_from_date(stock, date):
         desired_year += [current_tuple[0]]
         desired_month += [current_tuple[1]]
         desired_day += [current_tuple[2]]
-        desired_open += [current_tuple[3]]
-        desired_high += [current_tuple[4]]
-        desired_low += [current_tuple[5]]
-        desired_close += [current_tuple[6]]
+        desired_open += [float(current_tuple[3])]
+        desired_high += [float(current_tuple[4])]
+        desired_low += [float(current_tuple[5])]
+        desired_close += [float(current_tuple[6])]
 
     # dictionary to stored the desired data lists and convert to a dataframe
     desired_data = {

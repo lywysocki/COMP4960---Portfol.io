@@ -15,7 +15,7 @@ def test_slope(ticker):
 
 test_slope("MSFT")
 test_slope("AMD")
-test_slope("SPY")
+# test_slope("SPY")
 test_slope("SNAP")
 test_slope("META")
 test_slope("COST")
