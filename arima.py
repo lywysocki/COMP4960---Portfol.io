@@ -4,6 +4,8 @@ from database import retrieve_stock_prices
 import plotly.express as px
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
+from statsmodels.tsa.arima.model import ARIMA
+from pmdarima.arima import auto_arima
 from statsmodels.tsa.stattools import adfuller, arma_order_select_ic
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from pmdarima.arima.utils import ndiffs
@@ -35,7 +37,7 @@ else:
     # an auto correlation function plot can find d value
     d = ndiffs(df.Close, test="adf")
 
-print(d)
+print("d value:", d)
 
 # use Akaike's Information Criterion for selecting predictors of regression
 aic_result = arma_order_select_ic(df.Close, ic=["aic"], trend="n")
@@ -43,17 +45,17 @@ aic_result = arma_order_select_ic(df.Close, ic=["aic"], trend="n")
 # p = order of the Auto Regressive term
 # the number of lags used as predictors
 p = aic_result['aic_min_order'][0]
-print(p)
+print("p value:", p)
 
 # q = moving average
 # number of lagged forcast errors that should go into the model
 q = aic_result['aic_min_order'][1]
-print(q)
+print("q value:", q)
 
 # Outputs graph of time series
-fig = px.line(df, x='Date', y='Close')
-fig.update_xaxes(rangeslider_visible=True)
-fig.show()
+# fig = px.line(df, x='Date', y='Close')
+# fig.update_xaxes(rangeslider_visible=True)
+# fig.show()
 
 
 # train_data, test_data = df[0:int(len(df)*0.7)], df[int(len(df)*0.7):]
@@ -63,9 +65,40 @@ fig.show()
 # model_predictions = []
 # N_test_observations = len(test_data)
 
-model = sm.tsa.arima.ARIMA(df.Close, order=(p,d,q))
-model_fit = model.fit()
-print(model_fit.summary())
-#
+model = ARIMA(df.Close, order=(p,d,q))
+fitted = model.fit()
+print(fitted.summary())
+
+
+train_data, test_data = df.Close[0:int(len(df.Close)*0.7)], df.Close[int(len(df.Close)*0.7):]
+plt.figure(figsize=(10,6))
+plt.grid(True)
+plt.xlabel('Dates')
+plt.ylabel('Closing Prices')
+plt.plot(df.Close, 'green', label='Train data')
+plt.plot(test_data, 'blue', label='Test data')
+plt.legend()
+plt.show()
+
+# model_autoARIMA = auto_arima(df.Close, start_p=0, start_q=0,
+#                       test='adf',       # use adftest to find optimal 'd'
+#                       max_p=p, max_q=q, # maximum p and q
+#                       m=1,              # frequency of series
+#                       d=None,           # let model determine 'd'
+#                       seasonal=False,   # No Seasonality
+#                       start_P=0,
+#                       D=0,
+#                       trace=True,
+#                       error_action='ignore',
+#                       suppress_warnings=True,
+#                       stepwise=True)
+# print(model_autoARIMA.summary())
+# model_autoARIMA.plot_diagnostics(figsize=(15,8))
+# plt.show()
+
+# model = ARIMA(df.Close, order=(2,1,2))
+# fitted = model.fit()
+# print(fitted.summary())
+
 # model_fit.plot_predict(dynamic=False)
 # plt.show()
