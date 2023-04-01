@@ -8,55 +8,6 @@ from stock_tickers import stock_tickers
 # Connect to Finnhub.io with API key
 finnhub_client = finnhub.Client(api_key="cg7of21r01qgl488q6jgcg7of21r01qgl488q6k0")
 
-
-# Function to check the input date is valid
-def is_valid_date(date):
-    # lists containing months and there relative amount of days
-    days31 = [1, 3, 5, 7, 8, 10, 12]
-    days30 = [1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-
-    # pointers for day, month, year, and current year
-    date_list = date.split('-')
-    day = date_list[0]
-    month = date_list[1]
-    year = date_list[2]
-    curr_date = dt.date.today()
-    curr_year = curr_date.year
-
-    # check to ensure valid date
-    if not day.isnumeric() or not month.isnumeric() or not year.isnumeric():
-        return False
-    if int(day) > 31:
-        return False
-    if int(month) > 12:
-        return False
-    if int(year) > int(curr_year):
-        return False
-    if int(day) == 31 and int(month) not in days31:
-        return False
-    if int(day) == 30 and int(month) not in days30:
-        return False
-    if int(day) == 29 and int(month) not in days30 and int(year) % 4 != 0:
-        return False
-
-    return True
-
-
-# Function to obtain user input
-def get_input():
-    ticker = input("Enter the stock ticker: ")
-    while ticker not in stock_tickers:
-        ticker = input("We do not have data for that stock in our database: ")
-
-    historical_date = input("What date would you like data to date back to (DD-MM-YYYY): ")
-
-    while not is_valid_date(historical_date):
-        historical_date = input("Please enter a valid date (DD-MM-YYYY): ")
-        is_valid_date(historical_date)
-
-    return ticker, historical_date
-
-
 # Function to retrieve stock prices for the stock input from the user
 # stock param is the ticker input from the user
 # start_date (MM-DD-YYYY) param is the date of how far the user wants to pull historical data from
@@ -248,3 +199,4 @@ def write_to_db(stock, start_date):
 
     pass
 
+get_input()
