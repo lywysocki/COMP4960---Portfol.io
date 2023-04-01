@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        
+        <link rel="stylesheet" href="{% static 'style.css' %}" />
+    </head>
+    <body>
+        <form action="/" method="post">
+            {% csrf_token %}
+            <div class="form_flex base1">
+                {{ form.non_field_errors }}
+                <!-- TICKER BOX -->
+                <label for="tickerdiv" class="labelstyle">Input Ticker</label>
+                <div class="ticker-in style1" id="tickerdiv">
+                    {{ form.ticker.errors }}
+                    {{ form.ticker }}
+                    <input id="id_submit" class="inputstyle" type="submit" value="Generate">
+                </div>
+                <!-- HISTORICAL CHECKBOXES -->
+                <label for="histcheckbox" class="labelstyle">Historical Timeframe</label>
+                <div class="checkbox style1" id="histcheckbox">
+                    {{ form.hist.errors }}
+                    {{ form.hist }}
+                </div>
+                <!-- FUTURE CHECKBOXES -->
+                <label for="futurecheckbox" class="labelstyle">Future Timeframe</label>
+                <div class="checkbox style1" id="futurecheckbox">
+                    {{ form.future.errors }}
+                    {{ form.future }}
+                </div>
+                <!-- PREDICTION BOX -->
+                <label for="predictiondiv" class="labelstyle">Prediction</label>
+                <div class="prediction style1" id="predictiondiv"></div>
+            </div>
+        </form>
+        <div class="base2" id="graphdiv">
+            <h2>Historical Timeframe: {{ hist }}</h2>
+            <h2>Future Timeframe: {{ future }}</h2>
+        </div>
+        <div class="base3" id="statsdiv">
+            <h2>Predicting ticker: {{ ticker }}</h2>
+        </div>
+    </body>
+</html>
