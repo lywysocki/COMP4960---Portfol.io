@@ -1,5 +1,5 @@
 from arima import get_data
-#
+
 ticker = input("Enter Ticker: ")
 date = input("Enter dater in MM-DD-YYYY format: ")
 print(ticker)
