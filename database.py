@@ -11,7 +11,7 @@ finnhub_client = finnhub.Client(api_key="cg7of21r01qgl488q6jgcg7of21r01qgl488q6k
 
 # Function to check the input date is valid
 def is_valid_date(date):
-    # lists containing months and there relative amount of days
+    # lists containing months and their relative amount of days
     days31 = [1, 3, 5, 7, 8, 10, 12]
     days30 = [1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
