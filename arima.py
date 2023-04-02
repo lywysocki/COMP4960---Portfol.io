@@ -62,7 +62,7 @@ def difference(dataset, interval=1):
 def inverse_difference(history, y_hat, interval=1):
     return y_hat + history[-interval]
 
-def forcast_one_step(dataset, dates):
+def forcast_one_step(dataset: pd.DataFrame, dates):
     train_data, test_data = dataset[0:int(len(dataset) * 0.7)], dataset[int(len(dataset) * 0.7):]
     # seasonal difference
     x = dataset.values
@@ -78,8 +78,11 @@ def forcast_one_step(dataset, dates):
     forecast = inverse_difference(x, forecast, days_in_year)
     print(f"One-Step Forecast: {forecast}")
     #multi-step forecast
-    msforecast = [inverse_difference(x, yhat, days_in_year) for yhat in model_fit.forecast(steps=7)]
-    print(msforecast)
+    # for testing, remove later
+    hist = x.tolist()
+    for yhat in model_fit.forecast(steps=7):
+        hist.append(inverse_difference(hist, yhat, days_in_year))
+    print(hist[len(x):])
     return
     # graphs the historical data and the forecast/prediction
     print(dataset)
