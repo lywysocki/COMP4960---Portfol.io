@@ -79,29 +79,14 @@ def forcast_one_step(dataset, dates):
     # graphs the historical data and the forecast/prediction
     plt.xlabel('Dates')
     plt.ylabel('Closing Prices')
+    # plots (x, y, color, key label)
     plt.plot(dates.index.values, dataset.values,'pink', label='Original')
-    X = np.linspace(dataset.iloc[dataset.size - 1], dataset.iloc[dataset.size - 1] + forecast, 365)
-    plt.plot( X * ((dataset.size - dataset.iloc[0]) / forecast) + dataset.iloc[0], X, 'blue', label='Predicted')
+    X = np.linspace(dataset.iloc[dataset.size - 1], dataset.iloc[dataset.size - 1] + 365, 365)
+    # plt.plot(X * ((forecast - dataset.iloc[dataset.size - 1]) / (dataset.size - dataset.size - 1)) + dataset.iloc[0], X, 'blue', label='Predicted')
+    plt.plot(X * ((dataset.size - dataset.iloc[0]) / forecast) + dataset.iloc[0], X, 'blue', label='Predicted')
     plt.legend()
     plt.show()
 
 
-df = get_data("SCHW", "03-03-2003")
+df = get_data("TSLA", "03-03-2003")
 forcast_one_step(df.Close, df.Date)
-
-
-# Create Training and Test
-# train, test = df.Close[0:int(len(df.Close)*0.7)], df.Close[int(len(df.Close)*0.7):]
-
-# train_data, test_data = df.Close[0:int(len(df.Close)*0.7)], df.Close[int(len(df.Close)*0.7):]
-#
-# model = ARIMA(train_data, order=(get_p_value(df.Close), get_d_value(df.Close), get_q_value(df.Close)))
-# fitted = model.fit()
-# fitted.plot_predict(dynamic=False)
-# plt.show()
-
-# model = ARIMA(df.Close, order=(get_p_value(df.Close), get_d_value(df.Close), get_q_value(df.Close)))
-# model_fit = model.fit()
-# # one-step forecast - forcast for the next time step in series
-# forecast = model_fit.forecast(steps=10)[0]
-
