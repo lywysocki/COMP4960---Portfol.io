@@ -49,6 +49,7 @@ def get_q_value(dataset):
     # number of lagged forcast errors that should go into the model
     return aic_result['aic_min_order'][1]
 
+
 # create a differenced series
 def difference(dataset, interval=1):
     diff = list()
@@ -62,24 +63,29 @@ def difference(dataset, interval=1):
 def inverse_difference(history, y_hat, interval=1):
     return y_hat + history[-interval]
 
+
 def forcast_one_step(dataset, dates):
     train_data, test_data = dataset[0:int(len(dataset) * 0.7)], dataset[int(len(dataset) * 0.7):]
     # seasonal difference
     x = dataset.values
     days_in_year = 365
     differenced = difference(x, days_in_year)
+
     # fit model
     model = ARIMA(differenced, order=(get_p_value(differenced), get_d_value(differenced) , get_q_value(differenced)))
     model_fit = model.fit()
-    print(model_fit.summary())
-    # one-step forecast - forcast for the next time step in series
-    forecast = model_fit.forecast()[0]
-    # invert the differenced forecast to something usable
-    forecast = inverse_difference(x, forecast, days_in_year)
-    print(f"One-Step Forecast: {forecast}")
+
+    # # one-step forecast - forcast for the next time step in series
+    # forecast = model_fit.forecast()[0]
+    # # invert the differenced forecast to something usable
+    # forecast = inverse_difference(x, forecast, days_in_year)
+    # print(f"One-Step Forecast: {forecast}")
+
     #multi-step forecast
-    msforecast = [inverse_difference(x, yhat, days_in_year) for yhat in model_fit.forecast(steps=7)]
+    msforecast = [inverse_difference(x, yhat, days_in_year) for yhat in model_fit.forecast(steps=90)]
     print(msforecast)
+
+
     return
     # graphs the historical data and the forecast/prediction
     print(dataset)
@@ -91,7 +97,6 @@ def forcast_one_step(dataset, dates):
     Y = np.linspace(dataset.iloc[dataset.size - 50], dataset.iloc[dataset.size - 1] + 30, 20)
     print("Y is...")
     print(Y)
-    return
     # plt.plot(X * ((forecast - dataset.iloc[dataset.size - 1]) / (dataset.size - dataset.size - 1)) + dataset.iloc[0], X, 'blue', label='Predicted')
     # dataset.iloc[dataset.size]
     plt.plot(Y * ((dataset.size - dataset.iloc[0]) / abs(forecast)) + dataset.iloc[0], Y, 'blue', label='Predicted')
@@ -100,7 +105,6 @@ def forcast_one_step(dataset, dates):
 
 # df = retrieve_stock_prices("GRRR", "03-03-2003")
 # print(df.iloc[df.size])
-df = get_data("META", "12-01-2003")
-print(df)
+df = get_data("TSLA", "12-01-2003")
 forcast_one_step(df.Close, df.Date)
 # print(df)
