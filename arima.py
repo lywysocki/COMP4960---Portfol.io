@@ -15,8 +15,8 @@ warnings.filterwarnings("ignore")
 
 # gets dataframe for a specific stock
 def get_data(ticker, date):
-    df = retrieve_stock_prices(ticker, date)
 
+    df = retrieve_stock_prices(ticker, date)
     return df[['Date', 'Close']].copy()
 
 def get_d_value(dataset):
@@ -77,17 +77,25 @@ def forcast_one_step(dataset, dates):
     forecast = inverse_difference(x, forecast, days_in_year)
     print(f"One-Step Forecast: {forecast}")
     # graphs the historical data and the forecast/prediction
+    print(dataset)
+    plt.figure(figsize=(11, 5))
     plt.xlabel('Dates')
     plt.ylabel('Closing Prices')
     # plots (x, y, color, key label)
     plt.plot(dates.index.values, dataset.values,'pink', label='Original')
-    X = np.linspace(dataset.iloc[dataset.size - 50], dataset.iloc[dataset.size - 1] + 30, 360)
+    Y = np.linspace(dataset.iloc[dataset.size - 50], dataset.iloc[dataset.size - 1] + 30, 20)
+    print("Y is...")
+    print(Y)
+    return
     # plt.plot(X * ((forecast - dataset.iloc[dataset.size - 1]) / (dataset.size - dataset.size - 1)) + dataset.iloc[0], X, 'blue', label='Predicted')
-    plt.plot(X * ((dataset.size - dataset.iloc[0]) / forecast) + dataset.iloc[0], X, 'blue', label='Predicted')
+    # dataset.iloc[dataset.size]
+    plt.plot(Y * ((dataset.size - dataset.iloc[0]) / abs(forecast)) + dataset.iloc[0], Y, 'blue', label='Predicted')
     plt.legend()
     plt.show()
 
-
-df = get_data("GOOGL", "03-01-2023")
-forcast_one_step(df.Close, df.Date)
+# df = retrieve_stock_prices("GRRR", "03-03-2003")
+# print(df.iloc[df.size])
+df = get_data("GRRR", "12-01-2021")
 print(df)
+forcast_one_step(df.Close, df.Date)
+# print(df)
