@@ -10,8 +10,10 @@ body {
 
 .form_flex {
     display: flex;
-    flex-flow: row wrap;    
-    justify-content: flex-start;
+    flex-flow: column nowrap; 
+    align-items: center;
+    justify-content: space-around;
+
 }
 
 .base1 {
@@ -23,7 +25,7 @@ body {
 
     width:25%;
     height:97%;
-    background-color: grey
+    background-color: grey;
 }
 
 .base2 {
@@ -37,7 +39,7 @@ body {
     width:73%;
     height:60%;
 
-    background-color: grey
+    background-color: grey;
 }
 
 .base3 {
@@ -48,15 +50,15 @@ body {
 
     box-shadow: 2px 2px 5px black;
     border-radius: 5px;
-    width:75%;
+    width:73%;
     height:36%;
-    background-color: grey
+    background-color: grey;
 }
 
 .ticker-in {
     position: relative;
     width: 95%;
-    height: 15%;
+    height: 10%;
 }
 
 .checkbox {
@@ -67,26 +69,23 @@ body {
 
 .prediction {
     position: relative;
-    width: 94%;
-    height: 20%;
+    width: 95%;
+    height: 25%;
 }
 
 .style1 {
-    float: left;
-    margin: 3% 3% 3% 3%;
+    margin: 1% 3% 3% 3%;
     background-color: green;
     border-radius: 5px;
 }
 
 .labelstyle{
     position: relative;
-    border-width: 2px;
-    border-color: black;
-    padding-left: 1%
+    font-size: 20pt;
+    /* background-color: hotpink;  */
 }
 
 .inputstyle {
     position: relative;
-    border-width: 2px;
-    border-color: black
+    /* background-color: hotpink; */
 }

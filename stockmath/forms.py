@@ -15,7 +15,7 @@ class InputForm(forms.Form):
     ]
     ticker = forms.CharField(
         max_length=10,
-        widget=forms.TextInput(attrs={'class': 'inputstyle', 'style': 'width:50%;height:90%;'})
+        widget=forms.TextInput(attrs={'class': 'inputstyle', 'style':'height:30px;width:35%;font-size:large;'})
         )
     hist = forms.ChoiceField(
         choices=HIST_TFS,

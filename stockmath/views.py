@@ -12,6 +12,7 @@ def base_page(request):
         if form.is_valid():
             context = dict(**form.cleaned_data)
             context['form'] = form
+            context['ticker'] = form.cleaned_data['ticker'].upper()
             # DATA FETCHING BASED ON FORM INPUT GOES HERE
             return render(request, 'index.html', context)
     else:
