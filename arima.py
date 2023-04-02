@@ -10,8 +10,8 @@ from statsmodels.tsa.stattools import adfuller, arma_order_select_ic
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from pmdarima.arima.utils import ndiffs
 from sklearn.metrics import mean_squared_error
-# import warnings
-# warnings.filterwarnings("ignore")
+import warnings
+warnings.filterwarnings("ignore")
 
 # gets dataframe for a specific stock
 def get_data(ticker, date):
@@ -81,12 +81,13 @@ def forcast_one_step(dataset, dates):
     plt.ylabel('Closing Prices')
     # plots (x, y, color, key label)
     plt.plot(dates.index.values, dataset.values,'pink', label='Original')
-    X = np.linspace(dataset.iloc[dataset.size - 1], dataset.iloc[dataset.size - 1] + 365, 365)
+    X = np.linspace(dataset.iloc[dataset.size - 50], dataset.iloc[dataset.size - 1] + 30, 360)
     # plt.plot(X * ((forecast - dataset.iloc[dataset.size - 1]) / (dataset.size - dataset.size - 1)) + dataset.iloc[0], X, 'blue', label='Predicted')
     plt.plot(X * ((dataset.size - dataset.iloc[0]) / forecast) + dataset.iloc[0], X, 'blue', label='Predicted')
     plt.legend()
     plt.show()
 
 
-df = get_data("TSLA", "03-03-2003")
+df = get_data("GOOGL", "03-01-2023")
 forcast_one_step(df.Close, df.Date)
+print(df)
