@@ -188,5 +188,4 @@ def market_data(stock):
 
     return df
 
-
-# print(retrieve_stock_prices('AAPL', '01-01-2018')['Close'])
+# print(retrieve_stock_prices('AAPL', '01-01-2018'))
