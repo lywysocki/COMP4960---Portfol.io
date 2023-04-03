@@ -80,30 +80,41 @@ def forcast_one_step(dataset, dates):
     # forecast = inverse_difference(x, forecast, days_in_year)
     # print(f"One-Step Forecast: {forecast}")
 
+    temp = []
+    #Date shift
+    current_date = len(dataset) - 1
+    for i in range(60):
+        temp.append(current_date)
+        current_date += 1
+    dates2 = np.array(temp)
+
     #multi-step forecast
     hist = x.tolist()
-    for yhat in model_fit.forecast(steps=7):
+    for yhat in model_fit.forecast(steps=60):
         hist.append(inverse_difference(hist, yhat, days_in_year))
     print(hist[len(x):])
-    return
+
     # graphs the historical data and the forecast/prediction
-    print(dataset)
     plt.figure(figsize=(11, 5))
     plt.xlabel('Dates')
     plt.ylabel('Closing Prices')
+
     # plots (x, y, color, key label)
     plt.plot(dates.index.values, dataset.values,'pink', label='Original')
-    Y = np.linspace(dataset.iloc[dataset.size - 50], dataset.iloc[dataset.size - 1] + 30, 20)
-    print("Y is...")
-    print(Y)
-    # plt.plot(X * ((forecast - dataset.iloc[dataset.size - 1]) / (dataset.size - dataset.size - 1)) + dataset.iloc[0], X, 'blue', label='Predicted')
-    # dataset.iloc[dataset.size]
-    plt.plot(Y * ((dataset.size - dataset.iloc[0]) / abs(forecast)) + dataset.iloc[0], Y, 'blue', label='Predicted')
+    Y = hist[len(x):]
+    plt.plot(dates2, Y, 'blue', label='Predicted')
+
     plt.legend()
     plt.show()
 
 # df = retrieve_stock_prices("GRRR", "03-03-2003")
 # print(df.iloc[df.size])
-df = get_data("TSLA", "12-01-2003")
+df = get_data("GRRR", "12-01-2020")
 forcast_one_step(df.Close, df.Date)
 # print(df)
+
+
+# MISC Code
+# plt.plot(X * ((forecast - dataset.iloc[dataset.size - 1]) / (dataset.size - dataset.size - 1)) + dataset.iloc[0], X, 'blue', label='Predicted')
+# dataset.iloc[dataset.size]
+# plt.plot(Y * ((dataset.size - dataset.iloc[0]) / abs(forecast)) + dataset.iloc[0], Y, 'blue', label='Predicted')
