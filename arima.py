@@ -10,6 +10,7 @@ from statsmodels.tsa.stattools import adfuller, arma_order_select_ic
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from pmdarima.arima.utils import ndiffs
 from sklearn.metrics import mean_squared_error
+import math
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -74,47 +75,33 @@ def forcast_one_step(dataset, dates):
     model = ARIMA(differenced, order=(get_p_value(differenced), get_d_value(differenced) , get_q_value(differenced)))
     model_fit = model.fit()
 
-    # # one-step forecast - forcast for the next time step in series
-    # forecast = model_fit.forecast()[0]
-    # # invert the differenced forecast to something usable
-    # forecast = inverse_difference(x, forecast, days_in_year)
-    # print(f"One-Step Forecast: {forecast}")
+    num_of_pred_days = 700
 
-    temp = []
     #Date shift
+    temp = []
     current_date = len(dataset) - 1
-    for i in range(60):
+    for i in range(num_of_pred_days):
         temp.append(current_date)
         current_date += 1
     dates2 = np.array(temp)
 
     #multi-step forecast
     hist = x.tolist()
-    for yhat in model_fit.forecast(steps=60):
+    for yhat in model_fit.forecast(steps=num_of_pred_days):
         hist.append(inverse_difference(hist, yhat, days_in_year))
-    print(hist[len(x):])
+    #print(hist[len(x):])
+    Y = hist[len(x):]
 
     # graphs the historical data and the forecast/prediction
     plt.figure(figsize=(11, 5))
     plt.xlabel('Dates')
     plt.ylabel('Closing Prices')
-
     # plots (x, y, color, key label)
     plt.plot(dates.index.values, dataset.values,'pink', label='Original')
-    Y = hist[len(x):]
     plt.plot(dates2, Y, 'blue', label='Predicted')
-
     plt.legend()
     plt.show()
 
-# df = retrieve_stock_prices("GRRR", "03-03-2003")
-# print(df.iloc[df.size])
-df = get_data("GRRR", "12-01-2020")
+
+df = get_data("MSFT", "12-01-2020")
 forcast_one_step(df.Close, df.Date)
-# print(df)
-
-
-# MISC Code
-# plt.plot(X * ((forecast - dataset.iloc[dataset.size - 1]) / (dataset.size - dataset.size - 1)) + dataset.iloc[0], X, 'blue', label='Predicted')
-# dataset.iloc[dataset.size]
-# plt.plot(Y * ((dataset.size - dataset.iloc[0]) / abs(forecast)) + dataset.iloc[0], Y, 'blue', label='Predicted')
