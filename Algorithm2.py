@@ -158,7 +158,7 @@ def main(ticker):
     ticker_200sma_slope = (ticker200sma / ticker_200sma_1y - 1) * 100
     ticker_50sma_slope = (ticker50sma / ticker_50sma_50d - 1) * 100
 
-    print(sma_cross(tickerdf, offset), "200sma:", ticker_200sma_slope, "50sma:", ticker_50sma_slope)
+    # print(sma_cross(tickerdf, offset), "200sma:", ticker_200sma_slope, "50sma:", ticker_50sma_slope)
 
-    return future_slope(sma_cross(tickerdf, offset), ticker_50sma_slope, ticker_200sma_slope) * 30
+    return future_slope(sma_cross(tickerdf, offset), ticker_50sma_slope, ticker_200sma_slope)
 

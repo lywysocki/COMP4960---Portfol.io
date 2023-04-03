@@ -1,4 +1,5 @@
 import Algorithm2 as a2
+import arimaCpy as arima
 
 
 def test_slope(ticker):
@@ -20,3 +21,4 @@ test_slope("SNAP")
 test_slope("META")
 test_slope("COST")
 test_slope("BTI")
+
