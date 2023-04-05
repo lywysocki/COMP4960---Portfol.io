@@ -2,15 +2,10 @@ import pandas as pd
 import numpy as np
 from database import retrieve_stock_prices
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 from statsmodels.tsa.arima.model import ARIMA
-from statsmodels.graphics.tsaplots import plot_predict
 from pmdarima.arima import auto_arima
 from statsmodels.tsa.stattools import adfuller, arma_order_select_ic
-from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from pmdarima.arima.utils import ndiffs
-from sklearn.metrics import mean_squared_error
-import math
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -75,7 +70,7 @@ def forcast_one_step(dataset, dates):
     model = ARIMA(differenced, order=(get_p_value(differenced), get_d_value(differenced) , get_q_value(differenced)))
     model_fit = model.fit()
 
-    num_of_pred_days = 700
+    num_of_pred_days = 31
 
     #Date shift
     temp = []
@@ -97,11 +92,12 @@ def forcast_one_step(dataset, dates):
     plt.xlabel('Dates')
     plt.ylabel('Closing Prices')
     # plots (x, y, color, key label)
+
     plt.plot(dates.index.values, dataset.values,'pink', label='Original')
     plt.plot(dates2, Y, 'blue', label='Predicted')
     plt.legend()
     plt.show()
 
 
-df = get_data("MSFT", "12-01-2020")
+df = get_data("AAPL", "12-01-2021")
 forcast_one_step(df.Close, df.Date)
