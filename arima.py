@@ -70,14 +70,15 @@ def forcast(dataset):
     model = ARIMA(differenced, order=(get_p_value(differenced), get_d_value(differenced) , get_q_value(differenced)))
     model_fit = model.fit()
 
-    num_of_pred_days = 31
+    num_of_pred_days = 365
 
     #Date shift
     temp = []
     current_date = dataset.index.values[-1]
     for i in range(num_of_pred_days):
-        temp.append(current_date)
+        temp.append(np.datetime64(current_date) + np.timedelta64(1, 'D'))
         current_date = temp[i]
+        print(current_date)
     dates2 = np.array(temp)
 
     #multi-step forecast
@@ -98,5 +99,6 @@ def forcast(dataset):
     plt.show()
 
 
-df = get_data("AAPL", "12-01-2021")
+df = get_data("APE", "12-01-2012")
+print(df)
 forcast(df)

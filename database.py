@@ -198,4 +198,4 @@ def write_to_db(stock, start_date):
 
     pass
 
-print(retrieve_stock_prices('AAPL', '01-01-2018'))
+# print(retrieve_stock_prices('AAPL', '01-01-2018'))
