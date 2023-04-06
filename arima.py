@@ -92,7 +92,6 @@ def forcast_one_step(dataset, dates):
     plt.xlabel('Dates')
     plt.ylabel('Closing Prices')
     # plots (x, y, color, key label)
-
     plt.plot(dates.index.values, dataset.values,'pink', label='Original')
     plt.plot(dates2, Y, 'blue', label='Predicted')
     plt.legend()
