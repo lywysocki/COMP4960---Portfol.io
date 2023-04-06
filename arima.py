@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore")
 def get_data(ticker, date):
 
     df = retrieve_stock_prices(ticker, date)
-    return df[['Date', 'Close']].copy()
+    return df[['Close']].copy()
 
 def get_d_value(dataset):
     # uses Augmented Dicky Fuller test to see if stock series is stationary
@@ -59,7 +59,7 @@ def difference(dataset, interval=1):
 def inverse_difference(history, y_hat, interval=1):
     return y_hat + history[-interval]
 
-def forcast_one_step(dataset, dates):
+def forcast(dataset):
     train_data, test_data = dataset[0:int(len(dataset) * 0.7)], dataset[int(len(dataset) * 0.7):]
     # seasonal difference
     x = dataset.values
@@ -74,10 +74,10 @@ def forcast_one_step(dataset, dates):
 
     #Date shift
     temp = []
-    current_date = len(dataset) - 1
+    current_date = dataset.index.values[-1]
     for i in range(num_of_pred_days):
         temp.append(current_date)
-        current_date += 1
+        current_date = temp[i]
     dates2 = np.array(temp)
 
     #multi-step forecast
@@ -92,11 +92,11 @@ def forcast_one_step(dataset, dates):
     plt.xlabel('Dates')
     plt.ylabel('Closing Prices')
     # plots (x, y, color, key label)
-    plt.plot(dates.index.values, dataset.values,'pink', label='Original')
+    plt.plot(dataset.index.values, dataset.values,'pink', label='Original')
     plt.plot(dates2, Y, 'blue', label='Predicted')
     plt.legend()
     plt.show()
 
 
 df = get_data("AAPL", "12-01-2021")
-forcast_one_step(df.Close, df.Date)
+forcast(df)
