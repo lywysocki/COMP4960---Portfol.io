@@ -70,21 +70,22 @@ def retrieve_stock_prices(stock, start_date):
         # convert timestamps into dates
         dates = []
         for timestamp in ts:
-            date_string = str(datetime.fromtimestamp(timestamp))
-            date_to_add = date_string.split(' ')
-            dates += [date_to_add[0]]
+            # convert the POSIX timestamp to a more understandable DateTime
+            date_string = datetime.fromtimestamp(timestamp)
+            # date_to_add = date_string.split(' ')
+            dates.append(date_string) #+= [date_to_add[0]]
 
         # create dictionary to populate dataframe
         data = {
-            'Date': dates,
+            # 'Date': dates,
             'Open': open,
             'Close': close,
             'High': high,
             'Low': low
         }
 
-        # create dataframe with the retrieved data
-        df = pd.DataFrame(data)
+        # create dataframe with the retrieved data and index of the DateTimes
+        df = pd.DataFrame(data=data, index=pd.DatetimeIndex(data=dates))
 
         return df
     except KeyError:
@@ -92,8 +93,6 @@ def retrieve_stock_prices(stock, start_date):
         pass
 
     pass
-    # fig = px.line(df, x="Date", y="Close", title="Test")
-    # fig.show()
 
 
 # function to display current day market data to the user
@@ -198,3 +197,5 @@ def write_to_db(stock, start_date):
         pass
 
     pass
+
+print(retrieve_stock_prices('AAPL', '01-01-2018'))
