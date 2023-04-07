@@ -60,45 +60,52 @@ def inverse_difference(history, y_hat, interval=1):
     return y_hat + history[-interval]
 
 def forcast(dataset):
-    train_data, test_data = dataset[0:int(len(dataset) * 0.7)], dataset[int(len(dataset) * 0.7):]
-    # seasonal difference
-    x = dataset.values
-    days_in_year = 365
-    differenced = difference(x, days_in_year)
+    try:
+        # seasonal difference
+        x = dataset.values
+        days_in_year = 365
+        differenced = difference(x, days_in_year)
 
-    # fit model
-    model = ARIMA(differenced, order=(get_p_value(differenced), get_d_value(differenced) , get_q_value(differenced)))
-    model_fit = model.fit()
+        # fit model
+        model = ARIMA(differenced, order=(get_p_value(differenced), get_d_value(differenced) , get_q_value(differenced)))
+        model_fit = model.fit()
 
-    num_of_pred_days = 365
+        num_of_pred_days = 365
 
-    #Date shift
-    temp = []
-    current_date = dataset.index.values[-1]
-    for i in range(num_of_pred_days):
-        temp.append(np.datetime64(current_date) + np.timedelta64(1, 'D'))
-        current_date = temp[i]
-        print(current_date)
-    dates2 = np.array(temp)
+        #Creates dates for prediciton (the x-axis)
+        temp = []
+        current_date = dataset.index.values[-1]
+        for i in range(num_of_pred_days):
+            temp.append(np.datetime64(current_date) + np.timedelta64(1, 'D'))
+            current_date = temp[i]
+            print(current_date)
+        dates2 = np.array(temp)
 
-    #multi-step forecast
-    hist = x.tolist()
-    for yhat in model_fit.forecast(steps=num_of_pred_days):
-        hist.append(inverse_difference(hist, yhat, days_in_year))
-    #print(hist[len(x):])
-    Y = hist[len(x):]
+        #multi-step forecast
+        hist = x.tolist()
+        for yhat in model_fit.forecast(steps=num_of_pred_days):
+            hist.append(inverse_difference(hist, yhat, days_in_year))
+        #print(hist[len(x):])
+        Y = hist[len(x):]
 
-    # graphs the historical data and the forecast/prediction
-    plt.figure(figsize=(11, 5))
-    plt.xlabel('Dates')
-    plt.ylabel('Closing Prices')
-    # plots (x, y, color, key label)
-    plt.plot(dataset.index.values, dataset.values,'pink', label='Original')
-    plt.plot(dates2, Y, 'blue', label='Predicted')
-    plt.legend()
-    plt.show()
+        # graphs the historical data and the forecast/prediction
+        plt.figure(figsize=(11, 5))
+        plt.xlabel('Dates')
+        plt.ylabel('Closing Prices')
+        # plots (x, y, color, key label)
+        plt.plot(dataset.index.values, dataset.values,'pink', label='Historical Price')
+        plt.plot(dates2, Y, 'blue', label='Predicted Price')
+        plt.legend()
+        plt.show()
+    except ValueError:
+        plt.figure(figsize=(11, 5))
+        plt.xlabel('Dates')
+        plt.ylabel('Closing Prices')
+        plt.plot(dataset.index.values, dataset.values, 'pink', label='Historical Price')
+        plt.legend()
+        plt.show()
+        print("Not enough historical data to make an accurate prediction")
 
 
 df = get_data("APE", "12-01-2012")
-print(df)
 forcast(df)
