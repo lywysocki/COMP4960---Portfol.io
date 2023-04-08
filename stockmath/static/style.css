@@ -19,7 +19,7 @@ body {
 .base1 {
     position: absolute;
     margin: .05% .05% .05% .05%;
-
+    
     box-shadow: 2px 2px 5px black;
     border-radius: 5px;
 
@@ -32,13 +32,13 @@ body {
     position: absolute;
     margin: .05% .05% .05% .05%;
     left: 26%;
-
+    
     box-shadow: 2px 2px 5px black;
     border-radius: 5px;
-
+    
     width:73%;
     height:60%;
-
+    
     background-color: grey;
 }
 
@@ -47,13 +47,25 @@ body {
     margin: .05% .05% .05% .05%;
     left:26%;
     top:62%;
-
+    
     box-shadow: 2px 2px 5px black;
     border-radius: 5px;
     width:73%;
     height:36%;
     background-color: grey;
 }
+
+.grid {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.grid-element {
+    text-align: center;
+    padding: 2px;
+}
+
+
 
 .ticker-in {
     position: relative;
@@ -83,6 +95,12 @@ body {
     position: relative;
     font-size: 20pt;
     /* background-color: hotpink;  */
+}
+
+.imagelabel{
+    position: absolute;
+    top: .05%;
+    right: 2%;
 }
 
 .inputstyle {
