@@ -59,7 +59,7 @@ def difference(dataset, interval=1):
 def inverse_difference(history, y_hat, interval=1):
     return y_hat + history[-interval]
 
-def forcast(dataset):
+def forcast(dataset,pred_days):
     try:
         # seasonal difference
         x = dataset.values
@@ -70,7 +70,7 @@ def forcast(dataset):
         model = ARIMA(differenced, order=(get_p_value(differenced), get_d_value(differenced) , get_q_value(differenced)))
         model_fit = model.fit()
 
-        num_of_pred_days = 365
+        num_of_pred_days = pred_days
 
         #Creates dates for prediciton (the x-axis)
         temp = []
@@ -107,5 +107,5 @@ def forcast(dataset):
         print("Not enough historical data to make an accurate prediction")
 
 
-df = get_data("APE", "12-01-2012")
-forcast(df)
+df = get_data("AAPL", "12-01-2012")
+forcast(df, 365)
