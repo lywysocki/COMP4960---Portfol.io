@@ -203,7 +203,7 @@ def percent_change(ticker, from_date_offset, to_date_offset):
 
 # This returns the future expected slope for a given ticker over a 1-year period
 def prediction_slope(ticker):
-    #tickerdf = get_ticker_df(ticker)
+    # tickerdf = get_ticker_df(ticker)
     # tickerdf = fetch_data_from_date(ticker, "01-01-2020")
     tickerdf = retrieve_stock_prices(ticker, "01-01-2020", 0)
 
@@ -220,7 +220,7 @@ def prediction_slope(ticker):
     ticker_200sma_slope = (ticker200sma / ticker_200sma_1y - 1) * 100
     ticker_50sma_slope = (ticker50sma / ticker_50sma_50d - 1) * 100
 
-    print(sma_cross(tickerdf, offset), "200sma:", ticker_200sma_slope, "50sma:", ticker_50sma_slope)
+    # print(sma_cross(tickerdf, offset), "200sma:", ticker_200sma_slope, "50sma:", ticker_50sma_slope)
 
     return future_slope(sma_cross(tickerdf, offset), ticker_50sma_slope, ticker_200sma_slope) / 250
 

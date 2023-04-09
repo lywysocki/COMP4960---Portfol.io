@@ -89,7 +89,7 @@ def forcast(ticker, pred_days):
         for i in range(num_of_pred_days):
             temp.append(np.datetime64(current_date) + np.timedelta64(1, 'D'))
             current_date = temp[i]
-            print(current_date)
+            # print(current_date)
         dates2 = np.array(temp)
 
         # multi-step forecast
