@@ -18,8 +18,8 @@ warnings.filterwarnings("ignore")
 def get_data(ticker, date):
 
     df = retrieve_stock_prices(ticker, date, 0)
-    #return df['Close']
-    return fetch_close_from_date(ticker, date)
+    return df['Close']
+    #return fetch_close_from_date(ticker, date)
 
 
 def get_d_value(dataset):
@@ -70,7 +70,6 @@ def inverse_difference(history, y_hat, interval=1):
 def forcast(ticker, pred_days):
 
     dataset = get_data(ticker, "01-01-2020")
-    #dataset2 = get_data(ticker, "01-01-2020", 90)
 
     try:
         # seasonal difference
