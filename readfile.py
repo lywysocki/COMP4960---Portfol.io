@@ -22,7 +22,7 @@ d = pickle.loads(data)
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='password'
+    password='Portfol.io2023'
 )
 
 mycursor = mydb.cursor()
