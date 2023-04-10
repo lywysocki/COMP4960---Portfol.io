@@ -3,8 +3,8 @@ import finnhub
 import pandas as pd
 import datetime
 import time
-from query import fetch_data_from_date
-from database import retrieve_stock_prices
+from Database.query import fetch_data_from_date
+from Database.database import retrieve_stock_prices
 
 # dataframe print formatting
 pd.set_option('display.max_columns', None)

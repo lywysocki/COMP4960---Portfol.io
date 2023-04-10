@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 import datetime as dt
 import time
-from stock_tickers import stock_tickers
+from Database.stock_tickers import stock_tickers
 
 # Connect to Finnhub.io with API key
 finnhub_client = finnhub.Client(api_key="cg7of21r01qgl488q6jgcg7of21r01qgl488q6k0")

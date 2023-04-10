@@ -1,4 +1,5 @@
-import arima as arima
+from Algorithm import arima as arima
+
 """
 ticker = "NVDA"
 df = arima.get_data(ticker, "01-01-2021", 0)

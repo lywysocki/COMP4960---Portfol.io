@@ -1,7 +1,7 @@
-import Algorithm2 as a2
+from Algorithm import Algorithm2 as a2
 # import arimaCpy as arima
-from query import fetch_close_from_date
-from database import retrieve_stock_prices
+from Database.query import fetch_close_from_date
+from Database.database import retrieve_stock_prices
 
 '''
 def test_slope(ticker):

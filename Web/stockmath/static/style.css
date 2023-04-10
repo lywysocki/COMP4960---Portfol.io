@@ -1,0 +1,109 @@
+html {
+    font-size: 16pt;
+    font-family: 'Times New Roman', Times, serif;
+
+}
+
+body {
+    background-color: green;
+}
+
+.form_flex {
+    display: flex;
+    flex-flow: column nowrap; 
+    align-items: center;
+    justify-content: space-around;
+
+}
+
+.base1 {
+    position: absolute;
+    margin: .05% .05% .05% .05%;
+    
+    box-shadow: 2px 2px 5px black;
+    border-radius: 5px;
+
+    width:25%;
+    height:97%;
+    background-color: grey;
+}
+
+.base2 {
+    position: absolute;
+    margin: .05% .05% .05% .05%;
+    left: 26%;
+    
+    box-shadow: 2px 2px 5px black;
+    border-radius: 5px;
+    
+    width:73%;
+    height:60%;
+    
+    background-color: grey;
+}
+
+.base3 {
+    position: absolute;
+    margin: .05% .05% .05% .05%;
+    left:26%;
+    top:62%;
+    
+    box-shadow: 2px 2px 5px black;
+    border-radius: 5px;
+    width:73%;
+    height:36%;
+    background-color: grey;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.grid-element {
+    text-align: center;
+    padding: 2px;
+}
+
+
+
+.ticker-in {
+    position: relative;
+    width: 95%;
+    height: 10%;
+}
+
+.checkbox {
+    position: relative;
+    width: 95%;
+    
+}
+
+.prediction {
+    position: relative;
+    width: 95%;
+    height: 25%;
+}
+
+.style1 {
+    margin: 1% 3% 3% 3%;
+    background-color: green;
+    border-radius: 5px;
+}
+
+.labelstyle{
+    position: relative;
+    font-size: 20pt;
+    /* background-color: hotpink;  */
+}
+
+.imagelabel{
+    position: absolute;
+    top: .05%;
+    right: 2%;
+}
+
+.inputstyle {
+    position: relative;
+    /* background-color: hotpink; */
+}

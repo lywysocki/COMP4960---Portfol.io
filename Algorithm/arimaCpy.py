@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
-from database import retrieve_stock_prices
-from Algorithm2 import prediction_slope
-from query import fetch_data_from_date
-from query import fetch_close_from_date
+from Database.database import retrieve_stock_prices
+from Algorithm.Algorithm2 import prediction_slope
+from Database.query import fetch_data_from_date
+from Database.query import fetch_close_from_date
 
 import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
