@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
+
+from Algorithm.arima import forcast
 from .forms import InputForm
 
 # Create your views here.
+
 
 def base_page(request):
     # request has a filled form
@@ -14,6 +17,8 @@ def base_page(request):
             context['form'] = form
             context['ticker'] = form.cleaned_data['ticker'].upper()
             # DATA FETCHING BASED ON FORM INPUT GOES HERE
+            forcast(form.cleaned_data['ticker'], 90)
+
             context['open'] = 20
             context['close'] = 30
             context['high'] = 40

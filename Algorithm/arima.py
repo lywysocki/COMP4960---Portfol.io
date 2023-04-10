@@ -5,6 +5,7 @@ from Algorithm.Algorithm2 import prediction_slope
 from Database.query import fetch_data_from_date
 from Database.query import fetch_close_from_date
 
+import os
 import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 from pmdarima.arima import auto_arima
@@ -111,17 +112,20 @@ def forcast(ticker, pred_days):
         plt.xlabel('Dates')
         plt.ylabel('Closing Prices')
         # plots (x, y, color, key label)
-        plt.plot(dataset.index.values, dataset.values,'pink', label='Historical Price')
+        plt.plot(dataset.index.values, dataset.values, 'pink', label='Historical Price')
         plt.plot(dates2, Y, 'blue', label='Predicted Price')
         plt.legend()
-        plt.show()
+        # plt.show()
+        # plt.savefig(os.path.dirname(os.path.abspath("static/graph2.png")))
+        plt.savefig("../Web/stockmath/static/graph.png")
     except ValueError:
         plt.figure(figsize=(11, 5))
         plt.xlabel('Dates')
         plt.ylabel('Closing Prices')
         plt.plot(dataset.index.values, dataset.values, 'pink', label='Historical Price')
         plt.legend()
-        plt.show()
+        # plt.show()
+        plt.savefig(os.path.dirname(os.path.abspath(__file__)+"/Web/stockmath/static/graph.png"))
         print("Not enough historical data to make an accurate prediction")
 
 
