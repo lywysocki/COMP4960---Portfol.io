@@ -117,7 +117,7 @@ def forcast(ticker, pred_days):
         plt.legend()
         # plt.show()
         # plt.savefig(os.path.dirname(os.path.abspath("static/graph2.png")))
-        plt.savefig("../Web/stockmath/static/graph.png")
+        plt.savefig("../stockmath/static/graph.png")
     except ValueError:
         plt.figure(figsize=(11, 5))
         plt.xlabel('Dates')
@@ -125,7 +125,7 @@ def forcast(ticker, pred_days):
         plt.plot(dataset.index.values, dataset.values, 'pink', label='Historical Price')
         plt.legend()
         # plt.show()
-        plt.savefig(os.path.dirname(os.path.abspath(__file__)+"/Web/stockmath/static/graph.png"))
+        plt.savefig("../stockmath/static/graph.png")
         print("Not enough historical data to make an accurate prediction")
 
 
