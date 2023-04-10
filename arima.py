@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
 from database import retrieve_stock_prices
+from Algorithm2 import prediction_slope
+from query import fetch_data_from_date
+from query import fetch_close_from_date
+
 import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 from pmdarima.arima import auto_arima
@@ -9,11 +13,14 @@ from pmdarima.arima.utils import ndiffs
 import warnings
 warnings.filterwarnings("ignore")
 
+
 # gets dataframe for a specific stock
 def get_data(ticker, date):
 
-    df = retrieve_stock_prices(ticker, date)
-    return df[['Close']].copy()
+    df = retrieve_stock_prices(ticker, date, 0)
+    return df['Close']
+    #return fetch_close_from_date(ticker, date)
+
 
 def get_d_value(dataset):
     # uses Augmented Dicky Fuller test to see if stock series is stationary
@@ -59,7 +66,11 @@ def difference(dataset, interval=1):
 def inverse_difference(history, y_hat, interval=1):
     return y_hat + history[-interval]
 
-def forcast(dataset,pred_days):
+
+def forcast(ticker, pred_days):
+
+    dataset = get_data(ticker, "01-01-2020")
+
     try:
         # seasonal difference
         x = dataset.values
@@ -72,20 +83,28 @@ def forcast(dataset,pred_days):
 
         num_of_pred_days = pred_days
 
-        #Creates dates for prediciton (the x-axis)
+        # Creates dates for prediciton (the x-axis)
         temp = []
         current_date = dataset.index.values[-1]
         for i in range(num_of_pred_days):
             temp.append(np.datetime64(current_date) + np.timedelta64(1, 'D'))
             current_date = temp[i]
+            # print(current_date)
         dates2 = np.array(temp)
 
-        #multi-step forecast
+        # multi-step forecast
         hist = x.tolist()
         for yhat in model_fit.forecast(steps=num_of_pred_days):
             hist.append(inverse_difference(hist, yhat, days_in_year))
-        #print(hist[len(x):])
+        # print(hist[len(x):])
         Y = hist[len(x):]
+
+        # ########## Adding sma prediction slope to arima
+        slope = 1 + prediction_slope(ticker)
+
+        # add Y modification here?
+        for i in range(1, len(Y)):
+            Y[i] *= slope
 
         # graphs the historical data and the forecast/prediction
         plt.figure(figsize=(11, 5))
@@ -106,5 +125,3 @@ def forcast(dataset,pred_days):
         print("Not enough historical data to make an accurate prediction")
 
 
-df = get_data("AAPL", "12-01-2012")
-forcast(df, 365)

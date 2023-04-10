@@ -4,7 +4,7 @@ import pandas as pd
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="Portfol.io2023",
+    password="Password1!",
     database="djangodatabase"
 )
 
@@ -60,7 +60,7 @@ def fetch_data_from_date(stock, date):
         if data_year == year and data_month == month and data_day == day:
             # store the index
             index = results.index(data)
-            print(index)
+            #print(index)
             break
 
     # pointers for each key's value in the desired data dictionary
@@ -139,7 +139,7 @@ def fetch_close_from_date(stock, date):
         if data_year == year and data_month == month and data_day == day:
             # store the index
             index = results.index(data)
-            print(index)
+            # print(index)
             break
 
     # pointers for the close key's value in the desired data dictionary

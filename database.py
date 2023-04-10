@@ -29,11 +29,12 @@ finnhub_client = finnhub.Client(api_key="cg7of21r01qgl488q6jgcg7of21r01qgl488q6k
 # mydf = retrieve_stock_prices('AAPL', '01-01-2018')
 # close_price = mydf['Close']
 
+
 # to loop through dataframe:
 # for i in range (len(mydf)):
 #   each_close_price = mydf.iloc[i]['Close']
 #   print(each_close_price)
-def retrieve_stock_prices(stock, start_date):
+def retrieve_stock_prices(stock, start_date, offset):
     # split the input date for month, day, year retrieval
     date_string = start_date.split('-')
 
@@ -53,6 +54,8 @@ def retrieve_stock_prices(stock, start_date):
 
     # get current time timestamp
     current_ts = int(time.mktime(current_day.timetuple()))
+
+    current_ts -= offset*86400
 
     # make an API call to gather necessary data
     stock_price_data = finnhub_client.stock_candles(stock, 'D', start_ts, current_ts)
