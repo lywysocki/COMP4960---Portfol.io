@@ -67,9 +67,9 @@ def inverse_difference(history, y_hat, interval=1):
     return y_hat + history[-interval]
 
 
-def forcast(ticker, pred_days):
+def forcast(ticker, hist_date, pred_days):
 
-    dataset = get_data(ticker, "01-01-2020")
+    dataset = get_data(ticker, hist_date)
 
     try:
         # seasonal difference
@@ -89,7 +89,7 @@ def forcast(ticker, pred_days):
         for i in range(num_of_pred_days):
             temp.append(np.datetime64(current_date) + np.timedelta64(1, 'D'))
             current_date = temp[i]
-            # print(current_date)
+            print(current_date)
         dates2 = np.array(temp)
 
         # multi-step forecast
@@ -124,4 +124,5 @@ def forcast(ticker, pred_days):
         plt.show()
         print("Not enough historical data to make an accurate prediction")
 
-
+df = get_data("AAPL","01-01-2020", 60)
+forcast(df, 365)
