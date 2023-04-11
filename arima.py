@@ -47,7 +47,7 @@ def get_p_value(dataset):
     return aic_result['aic_min_order'][0]
 
 
-# gets the d value for ARIMA model
+# gets the q value for ARIMA model
 def get_q_value(dataset):
     # use Akaike's Information Criterion for selecting predictors of regression
     aic_result = arma_order_select_ic(dataset, ic=["aic"], trend="n")
@@ -73,15 +73,14 @@ def inverse_difference(history, y_hat, interval=1):
 # evaluates accuracy of the predictions via the average of mean squared error, root-mean-square error,
 # and mean absolute percentage error
 def timeseries_evaluation_metrics_func(true_data, pred_data):
-    def mean_absolute_percentage_error(true_data, pred_data):
-        true_data, pred_data = np.array(pred_data), np.array(pred_data)
-        return np.mean(np.abs((true_data - pred_data) / true_data)) * 100
-
+    def mean_absolute_percentage_error(data, pred):
+        data, pred = np.array(data), np.array(pred)
+        return np.mean(np.abs((data - pred) / data)) * 100
     print('Evaluation metric results:')
     MSE = metrics.mean_absolute_error(true_data, pred_data)
     RMSE = np.sqrt(metrics.mean_squared_error(true_data, pred_data))
     MAPE = mean_absolute_percentage_error(true_data, pred_data)
-    print(f'Accuracy percentage: {(100 - ((MSE + RMSE + MAPE) / 3)):.2f}%')
+    print(f'Accuracy percentage: {(100 -((MSE + RMSE + MAPE) / 3 )):.2f}%')
 
 
 # outputs a graph of predicted stock closing prices
