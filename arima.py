@@ -7,7 +7,6 @@ from query import fetch_close_from_date
 
 import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
-from pmdarima.arima import auto_arima
 from statsmodels.tsa.stattools import adfuller, arma_order_select_ic
 from pmdarima.arima.utils import ndiffs
 from sklearn import metrics
