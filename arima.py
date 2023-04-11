@@ -10,6 +10,7 @@ from statsmodels.tsa.arima.model import ARIMA
 from pmdarima.arima import auto_arima
 from statsmodels.tsa.stattools import adfuller, arma_order_select_ic
 from pmdarima.arima.utils import ndiffs
+from sklearn import metrics
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -67,6 +68,18 @@ def inverse_difference(history, y_hat, interval=1):
     return y_hat + history[-interval]
 
 
+def timeseries_evaluation_metrics_func(y_true, y_pred):
+    def mean_absolute_percentage_error(y_true, y_pred):
+        y_true, y_pred = np.array(y_true), np.array(y_pred)
+        return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+
+    print('Evaluation metric results:')
+    MSE = metrics.mean_absolute_error(y_true, y_pred)
+    RMSE = np.sqrt(metrics.mean_squared_error(y_true, y_pred))
+    MAPE = mean_absolute_percentage_error(y_true, y_pred)
+    print(f'Accuracy percentage: {(100 -((MSE + RMSE + MAPE) / 3 )):.2f}%')
+
+
 def forcast(ticker, hist_date, pred_days):
     # gets the dataframe for the specific stock and time period
     dataset = get_data(ticker, hist_date)
@@ -90,10 +103,13 @@ def forcast(ticker, hist_date, pred_days):
             current_date = temp[i]
         dates2 = np.array(temp)
 
-        # multi-step forecast
+        # multi-step forecast of future stock prices
         hist = x.tolist()
         for yhat in model_fit.forecast(steps=num_of_pred_days):
-            hist.append(inverse_difference(hist, yhat, days_in_year))
+            if inverse_difference(hist, yhat, days_in_year) < 0:
+                hist.append(abs(inverse_difference(hist, yhat, days_in_year)))
+            else:
+                hist.append(inverse_difference(hist, yhat, days_in_year))
         # print(hist[len(x):])
         Y = hist[len(x):]
 
@@ -104,8 +120,13 @@ def forcast(ticker, hist_date, pred_days):
         for i in range(1, len(Y)):
             Y[i] *= slope
 
+        # new dataset that houses hist_data to test against accuracy of prediction
+        test_data = dataset[int(len(dataset) - num_of_pred_days):]
+        timeseries_evaluation_metrics_func(test_data, Y)
+
         # graphs the historical data and the forecast/prediction
         plt.figure(figsize=(11, 5))
+        plt.title(ticker)
         plt.xlabel('Dates')
         plt.ylabel('Closing Prices')
         # plots: (x values, y values, color of line, key label)
@@ -115,6 +136,7 @@ def forcast(ticker, hist_date, pred_days):
         plt.show()
     except ValueError:
         plt.figure(figsize=(11, 5))
+        plt.title(ticker)
         plt.xlabel('Dates')
         plt.ylabel('Closing Prices')
         plt.plot(dataset.index.values, dataset.values, 'pink', label='Historical Price')

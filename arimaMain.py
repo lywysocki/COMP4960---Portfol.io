@@ -29,12 +29,12 @@ arima.forcast("SNAP", 90)
 
 
 arima.forcast("AAPL", "01-01-2020", 360)
-# arima.forcast("WMT", "01-01-2020", 360)
-# arima.forcast("SNAP", "01-01-2020", 360)
-# arima.forcast("SCHW", "01-01-2020", 360)
-# arima.forcast("AMD", "01-01-2020", 360)
-# arima.forcast("NVDA", "01-01-2020", 360)
-# arima.forcast("MSFT", "01-01-2020", 360)
+arima.forcast("WMT", "01-01-2020", 360)
+arima.forcast("SNAP", "01-01-2020", 360)
+arima.forcast("SCHW", "01-01-2020", 360)
+arima.forcast("AMD", "01-01-2020", 360)
+arima.forcast("NVDA", "01-01-2020", 360)
+arima.forcast("MSFT", "01-01-2020", 360)
 arima.forcast("GRRR", "01-01-2020", 360)
 arima.forcast("NXT", "01-01-2020", 360)
 
