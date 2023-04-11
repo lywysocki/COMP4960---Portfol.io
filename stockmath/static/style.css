@@ -99,8 +99,9 @@ body {
 
 .imagelabel{
     position: absolute;
-    top: .05%;
+    top: 2%;
     right: 2%;
+    border: 2px solid black;
 }
 
 .inputstyle {

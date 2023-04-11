@@ -14,6 +14,7 @@ def base_page(request):
             context['form'] = form
             context['ticker'] = form.cleaned_data['ticker'].upper()
             # DATA FETCHING BASED ON FORM INPUT GOES HERE
+            # os.remove and shutil.copy to work with image
             context['open'] = 20
             context['close'] = 30
             context['high'] = 40
