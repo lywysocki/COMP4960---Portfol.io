@@ -135,8 +135,8 @@ def forcast(ticker, hist_date, pred_days):
         plt.xlabel('Dates')
         plt.ylabel('Closing Prices')
         # plots: (x values, y values, color of line, key label)
-        plt.plot(dataset.index.values, dataset.values, 'pink', label='Historical Price')
-        plt.plot(dates2, Y, 'blue', label='Predicted Price')
+        plt.plot(dataset.index.values, dataset.values, 'slategray', label='Historical Price')
+        plt.plot(dates2, Y, 'palevioletred', label='Predicted Price')
         plt.legend()
         plt.show()
     except ValueError:
