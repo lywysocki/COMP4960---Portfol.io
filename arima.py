@@ -22,6 +22,7 @@ def get_data(ticker, date):
     # return fetch_close_from_date(ticker, date)
 
 
+# gets the d value for ARIMA model
 def get_d_value(dataset):
     # uses Augmented Dicky Fuller test to see if stock series is stationary
     dftest = adfuller(dataset)
@@ -37,6 +38,7 @@ def get_d_value(dataset):
         return ndiffs(dataset, test="adf")
 
 
+# gets the p value for ARIMA model
 def get_p_value(dataset):
     # use Akaike's Information Criterion for selecting predictors of regression
     aic_result = arma_order_select_ic(dataset, ic=["aic"], trend="n")
@@ -45,6 +47,7 @@ def get_p_value(dataset):
     return aic_result['aic_min_order'][0]
 
 
+# gets the d value for ARIMA model
 def get_q_value(dataset):
     # use Akaike's Information Criterion for selecting predictors of regression
     aic_result = arma_order_select_ic(dataset, ic=["aic"], trend="n")
@@ -53,7 +56,7 @@ def get_q_value(dataset):
     return aic_result['aic_min_order'][1]
 
 
-# create a differenced series
+# create a differenced series based on inputted dataset
 def difference(dataset, interval=1):
     diff = list()
     for i in range(interval, len(dataset)):
@@ -67,18 +70,23 @@ def inverse_difference(history, y_hat, interval=1):
     return y_hat + history[-interval]
 
 
-def timeseries_evaluation_metrics_func(y_true, y_pred):
-    def mean_absolute_percentage_error(y_true, y_pred):
-        y_true, y_pred = np.array(y_true), np.array(y_pred)
-        return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+# evaluates accuracy of the predictions via the average of mean squared error, root-mean-square error,
+# and mean absolute percentage error
+def timeseries_evaluation_metrics_func(true_data, pred_data):
+    def mean_absolute_percentage_error(true_data, pred_data):
+        true_data, pred_data = np.array(pred_data), np.array(pred_data)
+        return np.mean(np.abs((true_data - pred_data) / true_data)) * 100
 
     print('Evaluation metric results:')
-    MSE = metrics.mean_absolute_error(y_true, y_pred)
-    RMSE = np.sqrt(metrics.mean_squared_error(y_true, y_pred))
-    MAPE = mean_absolute_percentage_error(y_true, y_pred)
-    print(f'Accuracy percentage: {(100 -((MSE + RMSE + MAPE) / 3 )):.2f}%')
+    MSE = metrics.mean_absolute_error(true_data, pred_data)
+    RMSE = np.sqrt(metrics.mean_squared_error(true_data, pred_data))
+    MAPE = mean_absolute_percentage_error(true_data, pred_data)
+    print(f'Accuracy percentage: {(100 - ((MSE + RMSE + MAPE) / 3)):.2f}%')
 
 
+# outputs a graph of predicted stock closing prices
+# needs ~1.5 years of historical data to create a prediction
+# only a graph of historical data will be produced in 1.5 years of historical data is not available
 def forcast(ticker, hist_date, pred_days):
     # gets the dataframe for the specific stock and time period
     dataset = get_data(ticker, hist_date)
@@ -109,7 +117,6 @@ def forcast(ticker, hist_date, pred_days):
                 hist.append(abs(inverse_difference(hist, yhat, days_in_year)))
             else:
                 hist.append(inverse_difference(hist, yhat, days_in_year))
-        # print(hist[len(x):])
         Y = hist[len(x):]
 
         # Adding sma prediction slope to arima
