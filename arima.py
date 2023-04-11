@@ -11,15 +11,15 @@ from pmdarima.arima import auto_arima
 from statsmodels.tsa.stattools import adfuller, arma_order_select_ic
 from pmdarima.arima.utils import ndiffs
 import warnings
+
 warnings.filterwarnings("ignore")
 
 
 # gets dataframe for a specific stock
 def get_data(ticker, date):
-
     df = retrieve_stock_prices(ticker, date, 0)
     return df['Close']
-    #return fetch_close_from_date(ticker, date)
+    # return fetch_close_from_date(ticker, date)
 
 
 def get_d_value(dataset):
@@ -68,9 +68,8 @@ def inverse_difference(history, y_hat, interval=1):
 
 
 def forcast(ticker, hist_date, pred_days):
-
+    # gets the dataframe for the specific stock and time period
     dataset = get_data(ticker, hist_date)
-
     try:
         # seasonal difference
         x = dataset.values
@@ -78,18 +77,17 @@ def forcast(ticker, hist_date, pred_days):
         differenced = difference(x, days_in_year)
 
         # fit model
-        model = ARIMA(differenced, order=(get_p_value(differenced), get_d_value(differenced) , get_q_value(differenced)))
+        model = ARIMA(differenced, order=(get_p_value(differenced), get_d_value(differenced), get_q_value(differenced)))
         model_fit = model.fit()
 
         num_of_pred_days = pred_days
 
-        # Creates dates for prediciton (the x-axis)
+        # Create dates for prediction (the x-axis)
         temp = []
         current_date = dataset.index.values[-1]
         for i in range(num_of_pred_days):
             temp.append(np.datetime64(current_date) + np.timedelta64(1, 'D'))
             current_date = temp[i]
-            print(current_date)
         dates2 = np.array(temp)
 
         # multi-step forecast
@@ -99,10 +97,10 @@ def forcast(ticker, hist_date, pred_days):
         # print(hist[len(x):])
         Y = hist[len(x):]
 
-        # ########## Adding sma prediction slope to arima
+        # Adding sma prediction slope to arima
         slope = 1 + prediction_slope(ticker)
 
-        # add Y modification here?
+        # add Y modification here
         for i in range(1, len(Y)):
             Y[i] *= slope
 
@@ -110,8 +108,8 @@ def forcast(ticker, hist_date, pred_days):
         plt.figure(figsize=(11, 5))
         plt.xlabel('Dates')
         plt.ylabel('Closing Prices')
-        # plots (x, y, color, key label)
-        plt.plot(dataset.index.values, dataset.values,'pink', label='Historical Price')
+        # plots: (x values, y values, color of line, key label)
+        plt.plot(dataset.index.values, dataset.values, 'pink', label='Historical Price')
         plt.plot(dates2, Y, 'blue', label='Predicted Price')
         plt.legend()
         plt.show()
@@ -123,6 +121,3 @@ def forcast(ticker, hist_date, pred_days):
         plt.legend()
         plt.show()
         print("Not enough historical data to make an accurate prediction")
-
-df = get_data("AAPL","01-01-2020", 60)
-forcast(df, 365)
