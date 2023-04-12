@@ -111,11 +111,11 @@ def forcast(ticker, hist_date, pred_days):
 
         # multi-step forecast of future stock prices
         hist = x.tolist()
-        for yhat in model_fit.forecast(steps=num_of_pred_days):
-            if inverse_difference(hist, yhat, days_in_year) < 0:
-                hist.append(abs(inverse_difference(hist, yhat, days_in_year)))
+        for y_hat in model_fit.forecast(steps=num_of_pred_days):
+            if inverse_difference(hist, y_hat, days_in_year) < 0:
+                hist.append(abs(inverse_difference(hist, y_hat, days_in_year)))
             else:
-                hist.append(inverse_difference(hist, yhat, days_in_year))
+                hist.append(inverse_difference(hist, y_hat, days_in_year))
         Y = hist[len(x):]
 
         # Adding sma prediction slope to arima
