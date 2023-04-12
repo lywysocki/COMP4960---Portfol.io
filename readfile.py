@@ -1,11 +1,11 @@
 from stock_tickers import stock_tickers
-# from query import fetch_data_from_date
+from query import fetch_data_from_date
 import pickle
 import mysql.connector
 
 
-# Separates the list of stocks into 8 different dictionaries to store the data for each stock from the database
-# This is used for exporting the database to allow for local set up on other machines
+# # Separates the list of stocks into 8 different dictionaries to store the data for each stock from the database
+# # This is used for exporting the database to allow for local set up on other machines
 # part1 = {}
 # part2 = {}
 # part3 = {}
@@ -208,7 +208,7 @@ all_data.update(d15)
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='MyN3wP4ssw0rd'
+    password='Portfol.io2023'
 )
 
 # pointer variable to connect to database to exectue SQL commands

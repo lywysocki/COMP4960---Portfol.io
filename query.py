@@ -198,7 +198,7 @@ def fetch_close_from_date(stock, date):
         desired_dates.append(dt)
 
         # convert the value being added to the list into a float value to eliminate type error
-        desired_close += [float(current_tuple[6])]
+        desired_close += [float(current_tuple[7])]
 
     # dictionary to stored the desired data lists and convert to a dataframe
     desired_data = {
