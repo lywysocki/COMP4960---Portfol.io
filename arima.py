@@ -1,8 +1,5 @@
-import pandas as pd
 import numpy as np
-from database import retrieve_stock_prices
 from Algorithm2 import prediction_slope
-from query import fetch_data_from_date
 from query import fetch_close_from_date
 
 import matplotlib.pyplot as plt
@@ -13,13 +10,6 @@ from sklearn import metrics
 import warnings
 
 warnings.filterwarnings("ignore")
-
-
-# gets dataframe for a specific stock
-def get_data(ticker, date):
-    # df = retrieve_stock_prices(ticker, date, 0)
-    # return df['Close']
-    return fetch_close_from_date(ticker, date)
 
 
 # gets the d value for ARIMA model
@@ -87,8 +77,9 @@ def timeseries_evaluation_metrics_func(true_data, pred_data):
 # needs ~1.5 years of historical data to create a prediction
 # only a graph of historical data will be produced in 1.5 years of historical data is not available
 def forcast(ticker, hist_date, pred_days):
-    # gets the dataframe for the specific stock and time period
-    dataset = get_data(ticker, hist_date)
+    # gets dataframe for a specific stock starting from a specific date
+    dataset = fetch_close_from_date(ticker, hist_date)
+
     try:
         # seasonal difference
         x = dataset.values
@@ -147,4 +138,4 @@ def forcast(ticker, hist_date, pred_days):
         plt.plot(dataset.index.values, dataset.values, 'pink', label='Historical Price')
         plt.legend()
         plt.show()
-        print("Not enough historical data to make an accurate prediction")
+        raise ValueError("Not enough historical data to make an accurate prediction")

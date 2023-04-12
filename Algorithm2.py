@@ -1,10 +1,8 @@
-
 import finnhub
 import pandas as pd
 import datetime
 import time
 from query import fetch_data_from_date
-from database import retrieve_stock_prices
 
 # dataframe print formatting
 pd.set_option('display.max_columns', None)
@@ -204,8 +202,8 @@ def percent_change(ticker, from_date_offset, to_date_offset):
 # This returns the future expected slope for a given ticker over a 1-year period
 def prediction_slope(ticker):
     # tickerdf = get_ticker_df(ticker)
-    # tickerdf = fetch_data_from_date(ticker, "01-01-2020")
-    tickerdf = retrieve_stock_prices(ticker, "01-01-2020", 0)
+    tickerdf = fetch_data_from_date(ticker, "01-01-2020")
+    # tickerdf = retrieve_stock_prices(ticker, "01-01-2020", 0)
 
     # OFFSET FOR TESTING PURPOSES, starts prediction from x days ago, x = offset
     offset = 0
