@@ -17,9 +17,9 @@ warnings.filterwarnings("ignore")
 
 # gets dataframe for a specific stock
 def get_data(ticker, date):
-    df = retrieve_stock_prices(ticker, date, 0)
-    return df['Close']
-    # return fetch_close_from_date(ticker, date)
+    # df = retrieve_stock_prices(ticker, date, 0)
+    # return df['Close']
+    return fetch_close_from_date(ticker, date)
 
 
 # gets the d value for ARIMA model
