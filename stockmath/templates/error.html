@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        
+        <link rel="stylesheet" href="{% static 'style.css' %}" />
+    </head>
+    <body>
+        <form action="/" method="post">
+            {% csrf_token %}
+            <div class="form_flex base1">
+                {{ form.non_field_errors }}
+                <!-- TICKER BOX -->
+                <label for="tickerdiv" class="labelstyle"><u>Input Ticker</u></label>
+                <div class="form_flex ticker-in style1" id="tickerdiv">
+                    {{ form.ticker.errors }}
+                    {{ form.ticker }}
+                    <input id="id_submit" class="inputstyle" type="submit" value="Generate" style="width:25%;">
+                </div>
+                <!-- HISTORICAL CHECKBOXES -->
+                <label for="histcheckbox" class="labelstyle"><u>Historical Timeframe</u></label>
+                <div class="checkbox style1" id="histcheckbox">
+                    {{ form.hist.errors }}
+                    {{ form.hist }}
+                </div>
+                <!-- FUTURE CHECKBOXES -->
+                <label for="futurecheckbox" class="labelstyle"><u>Future Timeframe</u></label>
+                <div class="checkbox style1" id="futurecheckbox">
+                    {{ form.future.errors }}
+                    {{ form.future }}
+                </div>
+                <!-- PREDICTION BOX -->
+                <label for="predictiondiv" class="labelstyle"><u>Prediction</u></label>
+                <div class="prediction style1" id="predictiondiv">
+                    {% if pred_err %}
+                        <p>Error message: {{ pred_err }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+        <div class="base2" id="graphdiv">
+            <!-- <h2>Historical Timeframe: {{ hist }}</h2>
+            <h2>Future Timeframe: {{ future }}</h2> -->
+            <div style="text-align:center">
+                <h1 style="color: red;">An error has occurred.</h1>
+                {% if tick_err %}
+                    <p>Error message: {{ tick_err }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="base3" id="statsdiv">
+            <label for="grid" class="labelstyle" style="display:block;text-align:center;">Previous Day Statistics</label>
+            <div class="grid">    
+                <div class="grid-element">Open: {{ open }}</div>
+                <div class="grid-element">Close: {{ close }}</div>
+                <div class="grid-element">High: {{ high }}</div>
+                <div class="grid-element">Low: {{ low }}</div>
+            </div>
+        </div>
+    </body>
+</html>
