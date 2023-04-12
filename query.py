@@ -1,14 +1,12 @@
-import time
 from datetime import datetime
 import mysql.connector
 import pandas as pd
-from stock_tickers import stock_tickers
 
 # connect to the localhost database
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="MyN3wP4ssw0rd",
+    password="Portfol.io2023",
     database="djangodatabase"
 )
 
@@ -24,11 +22,11 @@ def get_date(date, results):
     # split the input date into a list of size 3
     date_string = date.split('-')
     # pull month
-    month = date_string[0]
+    month = int(date_string[0])
     # pull day
-    day = date_string[1]
+    day = int(date_string[1])
     # pull year
-    year = date_string[2]
+    year = int(date_string[2])
 
     # list of all tuples that have a date greater than or equal to desired date
     possible_dates = []
@@ -36,39 +34,46 @@ def get_date(date, results):
     # search through results list to find the tuple's index with the input date
     for data in results:
         # track the id, year, month, and day as int values to compare to user input date
-        data_id = data[0]
-        data_year = data[1]
-        data_month = data[2]
-        data_day = data[3]
+        data_year = int(data[1])
+        data_month = int(data[2])
+        data_day = int(data[3])
 
         # pointer to the index in the results list of the input date
         index = 0
 
-        # track the id corresponding to the row
-        row_id = 0
-
-        # if date exists in database return index
-        if data_year == year and data_month == month and data_day == day:
-            index = results.index(data)
-            return index
-
-        # if the date does not exist get the closest date
-        if data_year == year and data_month == month:
-            row_id = int(data[0])
-
-        if data_id >= row_id:
+        if data_year < year or data_month < month:
+            continue
+        else:
             possible_dates += [data]
 
-    # loop through the possible dates list to get the index of the closest date
-    for data in possible_dates:
-        # store the day from tuple as int for comparison
-        data_day = int(data[3])
-        # store input day as int for comparison
-        int_day = int(day)
+    real = []
 
-        if data_day >= int_day:
-            index = results.get(data)
+    for entry in possible_dates:
+        curr_day = int(entry[3])
+        curr_month = int(entry[2])
+
+        if curr_month == month and curr_day == day:
+            index = results.index(entry)
+            # print(index)
+            # print(entry)
+            return index
+
+        if curr_month == month:
+            if curr_day < day:
+                continue
+            else:
+                index = results.index(entry)
+                break
+
+        if curr_month > month:
+            real += [entry]
+            index = results.index(entry)
             break
+
+    # print(len(possible_dates))
+    # # print(real[0])
+    #
+    # print(index)
 
     return index
 
@@ -89,7 +94,7 @@ def fetch_data_from_date(stock, date):
     length = len(results)
 
     # store the index of the date to start at
-    # index = get_date(date, results)
+    index = get_date(date, results)
 
     # pointers for each key's value in the desired data dictionary
     ids = []
@@ -100,9 +105,10 @@ def fetch_data_from_date(stock, date):
     desired_high = []
     desired_low = []
     desired_close = []
+    desired_dates = []
 
     # loop through the results list from the found index to the end of the list
-    for i in range(0, length):
+    for i in range(index, length):
         current_tuple = results[i]
         ids += [current_tuple[0]]
         desired_year += [current_tuple[1]]
@@ -113,6 +119,12 @@ def fetch_data_from_date(stock, date):
         desired_high += [float(current_tuple[5])]
         desired_low += [float(current_tuple[6])]
         desired_close += [float(current_tuple[7])]
+
+        # convert to timestamp
+        dt = datetime(int(current_tuple[1]), int(current_tuple[2]), int(current_tuple[3]), 0, 0)
+
+        # add the date to the list
+        desired_dates.append(dt)
 
     # dictionary to stored the desired data lists and convert to a dataframe
     desired_data = {
@@ -127,10 +139,9 @@ def fetch_data_from_date(stock, date):
     }
 
     # convert the dictionary to a dataframe
-    df = pd.DataFrame(desired_data)
+    df = pd.DataFrame(data=desired_data, index=pd.DatetimeIndex(data=desired_dates))
 
-    # return df
-    return results
+    return df
 
 
 # Function to fetch the closing prices for the input stock from database from input date and on
@@ -160,49 +171,12 @@ def fetch_close_from_date(stock, date):
     # search through results list to find the tuple's index with the input date
     for data in results:
         # track the year, month, and day as int values to compare to user input date
-        data_year = int(data[0])
-        data_month = int(data[1])
-        data_day = int(data[2])
+        data_year = int(data[1])
+        data_month = int(data[2])
+        data_day = int(data[3])
 
         # pointer to the index in the results list of the input date
-        index = 0
-
-        # pointers to create strings and check if equal
-        # data_year_string, year_string = f"{year}", f"{year}"
-        #
-        # if data_month < 10:
-        #     data_month_string = f"0{data_month}"
-        # else:
-        #     data_month_string = f"{data_month}"
-        #
-        # if data_day < 10:
-        #     data_day_string = f"0{data_day}"
-        # else:
-        #     data_day_string = f"{data_day}"
-        #
-        # if month < 10:
-        #     month_string = f"0{month}"
-        # else:
-        #     month_string = f"{month}"
-        #
-        # if day < 10:
-        #     day_string = f"0{day}"
-        # else:
-        #     day_string = f"{day}"
-
-        # check to see if the dates match
-        # while data_year_string in data:
-        #     if data_month_string in data:
-        #         if data_day_string in data:
-        #             print(data_day_string)
-        #             # store the index
-        #             print(index)
-        #             index = results.index(data)
-        #             break
-        #         else:
-        #             data_day += 1
-        #     else:
-        #         data_month += 1
+        index = get_date(date, results)
 
     # pointer for the close key's value in the desired data dictionary
     desired_close = []
@@ -214,23 +188,11 @@ def fetch_close_from_date(stock, date):
         current_tuple = results[i]
         # gather desired year, month, and day
         desired_year = current_tuple[1]
-
-        if int(current_tuple[2]) < 10:
-            desired_month = f"0{current_tuple[2]}"
-        else:
-            desired_month = current_tuple[2]
-
-        if int(current_tuple[3]) < 10:
-            desired_day = f"0{current_tuple[3]}"
-        else:
-            desired_day = current_tuple[3]
-
-        # convert to YYYY-MM-DD format
-        # desired_date = f"{desired_year}-{desired_month}-{desired_day}"
+        desired_month = current_tuple[2]
+        desired_day = current_tuple[3]
 
         # convert to timestamp
         dt = datetime(int(desired_year), int(desired_month), int(desired_day), 0, 0)
-        # timestamp = int(time.mktime(dt.timetuple()))
 
         # add the date to the list
         desired_dates.append(dt)
@@ -246,19 +208,3 @@ def fetch_close_from_date(stock, date):
     df = pd.DataFrame(data=desired_data, index=pd.DatetimeIndex(data=desired_dates))
 
     return df
-#
-# stocks = {}
-# no_table = []
-# for stock in stock_tickers[4000:]:
-#     table = stock + '_table'
-#     try:
-#         mycursor.execute(f"SELECT * FROM {table}")
-#         results = mycursor.fetchall()
-#         stocks[table] = results
-#     except mysql.connector.errors.ProgrammingError:
-#         no_table += [stock]
-#
-# # print(stocks)
-# print(no_table)
-
-# print(fetch_close_from_date('AAPL', '03-30-2023'))

@@ -1,12 +1,12 @@
 import finnhub
 import pandas as pd
 from datetime import datetime
-import datetime as dt
 import time
 from stock_tickers import stock_tickers
 
 # Connect to Finnhub.io with API key
 finnhub_client = finnhub.Client(api_key="cg7of21r01qgl488q6jgcg7of21r01qgl488q6k0")
+
 
 # Function to retrieve stock prices for the stock input from the user
 # stock param is the ticker input from the user
@@ -29,12 +29,11 @@ finnhub_client = finnhub.Client(api_key="cg7of21r01qgl488q6jgcg7of21r01qgl488q6k
 # mydf = retrieve_stock_prices('AAPL', '01-01-2018')
 # close_price = mydf['Close']
 
-
 # to loop through dataframe:
 # for i in range (len(mydf)):
 #   each_close_price = mydf.iloc[i]['Close']
 #   print(each_close_price)
-def retrieve_stock_prices(stock, start_date, offset):
+def retrieve_stock_prices(stock, start_date):
     # split the input date for month, day, year retrieval
     date_string = start_date.split('-')
 
@@ -44,7 +43,7 @@ def retrieve_stock_prices(stock, start_date, offset):
     start_year = int(date_string[2])
 
     # convert start_date to datetime
-    start_dt = datetime(start_year, start_day, start_month, 0, 0)
+    start_dt = datetime(start_year, start_month, start_day, 0, 0)
 
     # store start_date as UNIX timestamp
     start_ts = int(time.mktime(start_dt.timetuple()))
@@ -54,8 +53,6 @@ def retrieve_stock_prices(stock, start_date, offset):
 
     # get current time timestamp
     current_ts = int(time.mktime(current_day.timetuple()))
-
-    current_ts -= offset*86400
 
     # make an API call to gather necessary data
     stock_price_data = finnhub_client.stock_candles(stock, 'D', start_ts, current_ts)
@@ -76,7 +73,7 @@ def retrieve_stock_prices(stock, start_date, offset):
             # convert the POSIX timestamp to a more understandable DateTime
             date_string = datetime.fromtimestamp(timestamp)
             # date_to_add = date_string.split(' ')
-            dates.append(date_string) #+= [date_to_add[0]]
+            dates.append(date_string)  # += [date_to_add[0]]
 
         # create dictionary to populate dataframe
         data = {
@@ -116,6 +113,7 @@ def market_data(stock):
     pe = financials.get('peNormalizedAnnual')
     dividend = financials.get('dividendPerShareAnnual')
 
+    # store all pointers in a dictionary to write to dataframe
     data = {
         'Open': open,
         'High': high,
@@ -144,7 +142,7 @@ def write_to_db(stock, start_date):
     start_year = int(date_string[2])
 
     # convert start_date to datetime
-    start_dt = datetime(start_year, start_day, start_month, 0, 0)
+    start_dt = datetime(start_year, start_month, start_day, 0, 0)
 
     # store start_date as UNIX timestamp
     start_ts = int(time.mktime(start_dt.timetuple()))
@@ -155,8 +153,12 @@ def write_to_db(stock, start_date):
     # get current time timestamp
     current_ts = int(time.mktime(current_day.timetuple()))
 
-    # make an API call to gather necessary data
-    stock_price_data = finnhub_client.stock_candles(stock, 'D', start_ts, current_ts)
+    try:
+        # make an API call to gather necessary data
+        stock_price_data = finnhub_client.stock_candles(stock, 'D', start_ts, current_ts)
+    except finnhub.exceptions.FinnhubAPIException:
+        time.sleep(60)
+        stock_price_data = finnhub_client.stock_candles(stock, 'D', start_ts, current_ts)
 
     # create lists to store data retrieved from API call
     try:
@@ -201,4 +203,4 @@ def write_to_db(stock, start_date):
 
     pass
 
-# print(retrieve_stock_prices('AAPL', '01-01-2018'))
+# print(retrieve_stock_prices('AAPL', '03-29-2023'))
