@@ -1,6 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpRequest
-
 from Algorithm.arima import forcast
 from .forms import InputForm
 
@@ -35,3 +33,4 @@ def base_page(request):
         context['pred_conf'] = "X"
     
     return render(request, 'index.html', context)
+
