@@ -68,10 +68,10 @@ def inverse_difference(history, y_hat, interval=1):
     return y_hat + history[-interval]
 
 
-def forcast(ticker, pred_days):
+def forecast(ticker, pred_days):
 
     dataset = get_data(ticker, "01-01-2020")
-
+    graph_path = os.path.abspath("./stockmath/static/graph.png")
     try:
         # seasonal difference
         x = dataset.values
@@ -117,7 +117,7 @@ def forcast(ticker, pred_days):
         plt.legend()
         # plt.show()
         # plt.savefig(os.path.dirname(os.path.abspath("static/graph2.png")))
-        plt.savefig("../stockmath/static/graph.png")
+        plt.savefig(graph_path)
     except ValueError:
         plt.figure(figsize=(11, 5))
         plt.xlabel('Dates')
@@ -125,7 +125,8 @@ def forcast(ticker, pred_days):
         plt.plot(dataset.index.values, dataset.values, 'pink', label='Historical Price')
         plt.legend()
         # plt.show()
-        plt.savefig("../stockmath/static/graph.png")
+        plt.savefig(graph_path)
         print("Not enough historical data to make an accurate prediction")
+        raise ValueError("Not enough historical data to make an accurate prediction")
 
 

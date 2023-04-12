@@ -29,13 +29,13 @@ arima.forcast("SNAP", 90)
 """
 
 
-arima.forcast("WMT", 90)
-arima.forcast("SNAP", 90)
-arima.forcast("SCHW", 90)
-arima.forcast("MSFT", 90)
-arima.forcast("AMD", 90)
-arima.forcast("AAPL", 90)
-arima.forcast("NVDA", 90)
+arima.forecast("WMT", 90)
+arima.forecast("SNAP", 90)
+arima.forecast("SCHW", 90)
+arima.forecast("MSFT", 90)
+arima.forecast("AMD", 90)
+arima.forecast("AAPL", 90)
+arima.forecast("NVDA", 90)
 
 
 

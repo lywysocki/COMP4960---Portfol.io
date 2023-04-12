@@ -1,4 +1,4 @@
-from Algorithm.arima import forcast
+from Algorithm.arima import forecast
 from matplotlib import pyplot as plt
 
-forcast("AMD", 200)
+forecast("AMD", 200)
