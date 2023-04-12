@@ -1,4 +1,6 @@
 from django import forms
+from django.core.validators import RegexValidator
+
 
 class InputForm(forms.Form):
     HIST_TFS = [
@@ -8,14 +10,16 @@ class InputForm(forms.Form):
         ('1mH', '1 Month'),
     ]
     FUTURE_TFS = [
-        ('1mF', '1 Month'),
-        ('3mF', '3 Months'),
-        ('6mF', '6 Months'),
         ('1yF', '1 Year'),
+        ('6mF', '6 Months'),
+        ('3mF', '3 Months'),
+        ('1mF', '1 Month'),
     ]
+    alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
     ticker = forms.CharField(
         max_length=10,
-        widget=forms.TextInput(attrs={'class': 'inputstyle', 'style':'height:30px;width:35%;font-size:large;'})
+        widget=forms.TextInput(attrs={'class': 'inputstyle', 'style':'height:30px;width:35%;font-size:large;'}),
+        validators=[alphanumeric]
         )
     hist = forms.ChoiceField(
         choices=HIST_TFS,

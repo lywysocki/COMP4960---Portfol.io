@@ -5,7 +5,7 @@ html {
 }
 
 body {
-    background-color: green;
+    background-color: #576b41;
 }
 
 .form_flex {
@@ -25,7 +25,7 @@ body {
 
     width:25%;
     height:97%;
-    background-color: grey;
+    background-color: white;
 }
 
 .base2 {
@@ -39,7 +39,7 @@ body {
     width:73%;
     height:60%;
     
-    background-color: grey;
+    background-color: white;
 }
 
 .base3 {
@@ -52,7 +52,7 @@ body {
     border-radius: 5px;
     width:73%;
     height:36%;
-    background-color: grey;
+    background-color: white;
 }
 
 .grid {
@@ -87,14 +87,14 @@ body {
 
 .style1 {
     margin: 1% 3% 3% 3%;
-    background-color: green;
+    background-color: #576b41;
     border-radius: 5px;
 }
 
 .labelstyle{
     position: relative;
     font-size: 20pt;
-    /* background-color: hotpink;  */
+    text-decoration: underline;
 }
 
 .imagelabel{
@@ -106,5 +106,4 @@ body {
 
 .inputstyle {
     position: relative;
-    /* background-color: hotpink; */
 }
