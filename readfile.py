@@ -4,8 +4,8 @@ import pickle
 import mysql.connector
 
 
-# Separates the list of stocks into 8 different dictionaries to store the data for each stock from the database
-# This is used for exporting the database to allow for local set up on other machines
+# # Separates the list of stocks into 8 different dictionaries to store the data for each stock from the database
+# # This is used for exporting the database to allow for local set up on other machines
 # part1 = {}
 # part2 = {}
 # part3 = {}
@@ -248,4 +248,3 @@ for key in all_data.keys():
         mycursor.execute(f"INSERT INTO {key} VALUES ({id}, {year}, {month}, {day}, {open}, {high}, {low}, {close})")
         # saves each row in the table
         mydb.commit()
-
