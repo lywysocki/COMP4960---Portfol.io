@@ -1,7 +1,6 @@
 from django import forms
 from django.core.validators import RegexValidator
 
-
 class InputForm(forms.Form):
     HIST_TFS = [
         ('5yH', '5 Years'),

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from Algorithm.arima import forcast
 from .forms import InputForm
 
 # Create your views here.
@@ -14,6 +15,7 @@ def base_page(request):
             context['ticker'] = form.cleaned_data['ticker'].upper()
             # try:
             # # DATA FETCHING BASED ON FORM INPUT GOES HERE
+            forcast(form.cleaned_data['ticker'], 90)
             # # os.remove and shutil.copy to work with image
             #     raise Exception("Test ticker error message")
             # except ValueError as pred_err:
