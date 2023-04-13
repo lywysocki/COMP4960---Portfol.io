@@ -76,6 +76,7 @@ def timeseries_evaluation_metrics_func(true_data, pred_data):
     print(f'Accuracy percentage: {(100 - ((MSE + RMSE + MAPE) / 3)):.2f}%')
 
 
+# based on an inputted number of months, returns the past date of months ago
 def get_date(num):
     past_date = date.today() + relativedelta(months=+num)
     return past_date.strftime('%m-%d-%Y')
@@ -87,6 +88,7 @@ def get_date(num):
 def forcast(ticker, num_hist_months , pred_days):
     # gets dataframe for a specific stock starting from a specific date
     print(get_date(num_hist_months))
+    print(type(get_date(num_hist_months)))
     dataset = fetch_close_from_date(ticker, get_date(num_hist_months))
 
     try:
