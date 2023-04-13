@@ -1,8 +1,7 @@
-from stock_tickers import stock_tickers
-from query import fetch_data_from_date
+# from stock_tickers import stock_tickers
+# from query import fetch_data_from_date
 import pickle
 import mysql.connector
-
 
 # # Separates the list of stocks into 8 different dictionaries to store the data for each stock from the database
 # # This is used for exporting the database to allow for local set up on other machines
@@ -168,7 +167,6 @@ with open('file14.txt', 'rb') as handle:
 with open('file15.txt', 'rb') as handle:
     data15 = handle.read()
 
-
 # loads all the data from the files into dictionaries
 d1 = pickle.loads(data1)
 d2 = pickle.loads(data2)
@@ -208,7 +206,7 @@ all_data.update(d15)
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='Portfol.io2023'
+    password='Password1!'
 )
 
 # pointer variable to connect to database to exectue SQL commands
@@ -229,7 +227,8 @@ mydb.commit()
 # the value for each key is a list of tuples of each row containing each value for each data in each column
 for key in all_data.keys():
     # creates the table for each stock we have data on and the columns necessary
-    mycursor.execute(f'CREATE TABLE IF NOT EXISTS {key} (ID DECIMAL(65), Year VARCHAR(255), Month VARCHAR(255), Day VARCHAR(255), Open DECIMAL(65,2), High DECIMAL(65,2), Low DECIMAL(65,2), Close DECIMAL(65,2))')
+    mycursor.execute(
+        f'CREATE TABLE IF NOT EXISTS {key} (ID DECIMAL(65), Year VARCHAR(255), Month VARCHAR(255), Day VARCHAR(255), Open DECIMAL(65,2), High DECIMAL(65,2), Low DECIMAL(65,2), Close DECIMAL(65,2))')
     # saves the table in the database
     mydb.commit()
 

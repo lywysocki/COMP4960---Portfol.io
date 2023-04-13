@@ -78,7 +78,7 @@ def timeseries_evaluation_metrics_func(true_data, pred_data):
 
 # based on an inputted number of months, returns the past date of months ago
 def get_date(num):
-    past_date = date.today() + relativedelta(months=+num)
+    past_date = date.today() - relativedelta(months=+num)
     return past_date.strftime('%m-%d-%Y')
 
 
