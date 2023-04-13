@@ -83,7 +83,7 @@ def get_date(num):
 # outputs a graph of predicted stock closing prices
 # needs ~1.5 years of historical data to create a prediction
 # only a graph of historical data will be produced in 1.5 years of historical data is not available
-def forcast(ticker, num_hist_months , pred_days):
+def forecast(ticker, num_hist_months , pred_days):
     # gets dataframe for a specific stock starting from a specific date
     dataset = fetch_close_from_date(ticker, get_date(num_hist_months))
     # gets dataframe for a specific stock's historical data for forcast predictions
