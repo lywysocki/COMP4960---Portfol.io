@@ -7,7 +7,7 @@ from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.stattools import adfuller, arma_order_select_ic
 from pmdarima.arima.utils import ndiffs
 from sklearn import metrics
-from datetime import date, timedelta, datetime
+from datetime import date
 from dateutil.relativedelta import *
 import warnings
 
