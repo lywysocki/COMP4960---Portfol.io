@@ -7,12 +7,14 @@ from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.stattools import adfuller, arma_order_select_ic
 from pmdarima.arima.utils import ndiffs
 from sklearn import metrics
+from datetime import date, timedelta, datetime
+from dateutil.relativedelta import *
 import warnings
 
 warnings.filterwarnings("ignore")
 
 
-# gets the d value for ARIMA model
+# gets the d value for ARIMA model~~
 def get_d_value(dataset):
     # uses Augmented Dicky Fuller test to see if stock series is stationary
     dftest = adfuller(dataset)
@@ -66,19 +68,26 @@ def timeseries_evaluation_metrics_func(true_data, pred_data):
     def mean_absolute_percentage_error(data, pred):
         data, pred = np.array(data), np.array(pred)
         return np.mean(np.abs((data - pred) / data)) * 100
+
     print('Evaluation metric results:')
     MSE = metrics.mean_absolute_error(true_data, pred_data)
     RMSE = np.sqrt(metrics.mean_squared_error(true_data, pred_data))
     MAPE = mean_absolute_percentage_error(true_data, pred_data)
-    print(f'Accuracy percentage: {(100 -((MSE + RMSE + MAPE) / 3 )):.2f}%')
+    print(f'Accuracy percentage: {(100 - ((MSE + RMSE + MAPE) / 3)):.2f}%')
+
+
+def get_date(num):
+    past_date = date.today() + relativedelta(months=+num)
+    return past_date.strftime('%m-%d-%Y')
 
 
 # outputs a graph of predicted stock closing prices
 # needs ~1.5 years of historical data to create a prediction
 # only a graph of historical data will be produced in 1.5 years of historical data is not available
-def forcast(ticker, hist_date, pred_days):
+def forcast(ticker, num_hist_months , pred_days):
     # gets dataframe for a specific stock starting from a specific date
-    dataset = fetch_close_from_date(ticker, hist_date)
+    print(get_date(num_hist_months))
+    dataset = fetch_close_from_date(ticker, get_date(num_hist_months))
 
     try:
         # seasonal difference

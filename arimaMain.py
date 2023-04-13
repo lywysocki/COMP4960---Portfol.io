@@ -1,6 +1,6 @@
 import arima as arima
 
-# arima.forcast("AAPL", "01-01-2020", 365)
+arima.forcast("GOOGL", 1, 365)
 # arima.forcast("WMT", "01-01-2020", 365)
 # arima.forcast("SNAP", "01-01-2020", 365)
 # arima.forcast("SCHW", "01-01-2020", 365)
@@ -22,7 +22,7 @@ import arima as arima
 # arima.forcast("NXT", "01-01-2020", 91)
 
 
-arima.forcast("AAPL", "03-23-2020", 182)
+# arima.forcast("AAPL", "03-30-2023", 182)
 # arima.forcast("WMT", "01-01-2008", 182)
 # arima.forcast("SNAP", "01-01-2008", 182)
 # arima.forcast("SCHW", "01-01-2008", 182)
@@ -30,7 +30,7 @@ arima.forcast("AAPL", "03-23-2020", 182)
 # arima.forcast("NVDA", "01-01-2008", 182)
 # arima.forcast("MSFT", "01-01-2008", 182)
 # arima.forcast("GRRR", "01-01-2008", 182)
-arima.forcast("NXT", "01-01-2008", 182)
+# arima.forcast("NXT", "01-01-2008", 182)
 
 # arima.forcast("AAPL", "01-01-2017", 30)
 # arima.forcast("WMT", "01-01-2017", 30)
