@@ -34,9 +34,9 @@ def get_date(date, results):
     # search through results list to find the tuple's index with the input date
     for data in results:
         # track the id, year, month, and day as int values to compare to user input date
-        data_year = int(data[0])
-        data_month = int(data[1])
-        data_day = int(data[2])
+        data_year = int(data[1])
+        data_month = int(data[2])
+        data_day = int(data[3])
 
         # pointer to the index in the results list of the input date
         index = 0
@@ -49,13 +49,11 @@ def get_date(date, results):
     real = []
 
     for entry in possible_dates:
-        curr_day = int(entry[2])
-        curr_month = int(entry[1])
+        curr_day = int(entry[3])
+        curr_month = int(entry[2])
 
         if curr_month == month and curr_day == day:
             index = results.index(entry)
-            # print(index)
-            # print(entry)
             return index
 
         if curr_month == month:
@@ -69,11 +67,6 @@ def get_date(date, results):
             real += [entry]
             index = results.index(entry)
             break
-
-    # print(len(possible_dates))
-    # # print(real[0])
-    #
-    # print(index)
 
     return index
 
@@ -97,7 +90,7 @@ def fetch_data_from_date(stock, date):
     index = get_date(date, results)
 
     # pointers for each key's value in the desired data dictionary
-    # ids = []
+    ids = []
     desired_year = []
     desired_month = []
     desired_day = []
@@ -110,15 +103,21 @@ def fetch_data_from_date(stock, date):
     # loop through the results list from the found index to the end of the list
     for i in range(index, length):
         current_tuple = results[i]
-        # ids += [current_tuple[0]]
-        desired_year += [current_tuple[0]]
-        desired_month += [current_tuple[1]]
-        desired_day += [current_tuple[2]]
+        ids += [current_tuple[0]]
+        desired_year += [current_tuple[1]]
+        desired_month += [current_tuple[2]]
+        desired_day += [current_tuple[3]]
         # convert each value being added to the list into a float value to eliminate type error
-        desired_open += [float(current_tuple[3])]
-        desired_high += [float(current_tuple[4])]
-        desired_low += [float(current_tuple[5])]
-        desired_close += [float(current_tuple[6])]
+        desired_open += [float(current_tuple[4])]
+        desired_high += [float(current_tuple[5])]
+        desired_low += [float(current_tuple[6])]
+        desired_close += [float(current_tuple[7])]
+
+        # convert to timestamp
+        dt = datetime(int(current_tuple[1]), int(current_tuple[2]), int(current_tuple[3]), 0, 0)
+
+        # add the date to the list
+        desired_dates.append(dt)
 
         # convert to timestamp
         dt = datetime(int(current_tuple[0]), int(current_tuple[1]), int(current_tuple[2]), 0, 0)
@@ -128,7 +127,7 @@ def fetch_data_from_date(stock, date):
 
     # dictionary to stored the desired data lists and convert to a dataframe
     desired_data = {
-        # 'ID': ids,
+        'ID': ids,
         'Year': desired_year,
         'Month': desired_month,
         'Day': desired_day,
@@ -148,15 +147,6 @@ def fetch_data_from_date(stock, date):
 # param: stock is the user input stock ticker
 # param: data is the user input data (string MM-DD-YYYY)
 def fetch_close_from_date(stock, date):
-    # split the input date into a list of size 3
-    date_string = date.split('-')
-    # pull month
-    month = int(date_string[0])
-    # pull day
-    day = int(date_string[1])
-    # pull year
-    year = int(date_string[2])
-
     # create table name to search for
     table = stock + "_table"
     # SQL command to pull data from all columns and rows in respective table
@@ -168,15 +158,8 @@ def fetch_close_from_date(stock, date):
     # store the length of the results list
     length = len(results)
 
-    # search through results list to find the tuple's index with the input date
-    for data in results:
-        # track the year, month, and day as int values to compare to user input date
-        data_year = int(data[0])
-        data_month = int(data[1])
-        data_day = int(data[2])
-
-        # pointer to the index in the results list of the input date
-        index = get_date(date, results)
+    # pointer to the index in the results list of the input date
+    index = get_date(date, results)
 
     # pointer for the close key's value in the desired data dictionary
     desired_close = []
@@ -187,9 +170,9 @@ def fetch_close_from_date(stock, date):
     for i in range(index, length):
         current_tuple = results[i]
         # gather desired year, month, and day
-        desired_year = current_tuple[0]
-        desired_month = current_tuple[1]
-        desired_day = current_tuple[2]
+        desired_year = current_tuple[1]
+        desired_month = current_tuple[2]
+        desired_day = current_tuple[3]
 
         # convert to timestamp
         dt = datetime(int(desired_year), int(desired_month), int(desired_day), 0, 0)
