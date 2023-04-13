@@ -141,7 +141,7 @@ def fetch_data_from_date(stock, date):
     # convert the dictionary to a dataframe
     df = pd.DataFrame(data=desired_data, index=pd.DatetimeIndex(data=desired_dates))
 
-    return df
+    # return df
 
 
 # Function to fetch the closing prices for the input stock from database from input date and on
