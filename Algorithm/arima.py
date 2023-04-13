@@ -3,6 +3,7 @@ from .Algorithm2 import prediction_slope
 from .query import fetch_close_from_date
 
 import matplotlib.pyplot as plt
+import os
 from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.stattools import adfuller, arma_order_select_ic
 from pmdarima.arima.utils import ndiffs
@@ -68,11 +69,11 @@ def timeseries_evaluation_metrics_func(true_data, pred_data):
         data, pred = np.array(data), np.array(pred)
         return np.mean(np.abs((data - pred) / data)) * 100
 
-    print('Evaluation metric results:')
     MSE = metrics.mean_absolute_error(true_data, pred_data)
     RMSE = np.sqrt(metrics.mean_squared_error(true_data, pred_data))
     MAPE = mean_absolute_percentage_error(true_data, pred_data)
-    print(f'Accuracy percentage: {(100 - ((MSE + RMSE + MAPE) / 3)):.2f}%')
+    # NOTE: THIS IS THE CONFIDENCE VALUE
+    return f'{(100 - ((MSE + RMSE + MAPE) / 3)):.2f}'
 
 
 # based on an inputted number of months, returns the past date of months ago
@@ -88,6 +89,7 @@ def forecast(ticker, num_hist_months , pred_days):
     dataset = fetch_close_from_date(ticker, get_date(num_hist_months))
     # gets dataframe for a specific stock's historical data for forcast predictions
     dataset_hist_for_pred = fetch_close_from_date(ticker, '01-01-2000')
+    graph_path = os.path.abspath("./stockmath/static/graph.png")
 
     try:
         # seasonal difference
@@ -138,7 +140,8 @@ def forecast(ticker, num_hist_months , pred_days):
         plt.plot(dataset.index.values, dataset.values, 'slategray', label='Historical Price')
         plt.plot(dates2, Y, 'palevioletred', label='Predicted Price')
         plt.legend()
-        plt.show()
+        # plt.show()
+        plt.savefig(graph_path)
     except ValueError:
         plt.figure(figsize=(11, 5))
         plt.title(ticker)
@@ -146,5 +149,6 @@ def forecast(ticker, num_hist_months , pred_days):
         plt.ylabel('Closing Prices')
         plt.plot(dataset.index.values, dataset.values, 'pink', label='Historical Price')
         plt.legend()
-        plt.show()
+        # plt.show()
+        plt.savefig(graph_path)
         raise ValueError("Not enough historical data to make an accurate prediction")
