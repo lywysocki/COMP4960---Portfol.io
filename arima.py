@@ -52,8 +52,7 @@ def get_q_value(dataset):
 def difference(dataset, interval=1):
     diff = list()
     for i in range(interval, len(dataset)):
-        value = dataset[i] - dataset[i - interval]
-        diff.append(value)
+        diff.append(dataset[i] - dataset[i - interval])
     return np.array(diff)
 
 
@@ -78,8 +77,7 @@ def timeseries_evaluation_metrics_func(true_data, pred_data):
 
 # based on an inputted number of months, returns the past date of months ago
 def get_date(num):
-    past_date = date.today() - relativedelta(months=+num)
-    return past_date.strftime('%m-%d-%Y')
+    return (date.today() - relativedelta(months=+num)).strftime('%m-%d-%Y')
 
 
 # outputs a graph of predicted stock closing prices
@@ -89,7 +87,7 @@ def forcast(ticker, num_hist_months , pred_days):
     # gets dataframe for a specific stock starting from a specific date
     dataset = fetch_close_from_date(ticker, get_date(num_hist_months))
     # gets dataframe for a specific stock's historical data for forcast predictions
-    dataset_hist_for_pred = fetch_close_from_date(ticker, '01-01-2008')
+    dataset_hist_for_pred = fetch_close_from_date(ticker, '01-01-2000')
 
     try:
         # seasonal difference
