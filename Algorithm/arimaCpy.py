@@ -128,3 +128,4 @@ def forcast(ticker, num_of_pred_days):
         plt.show()
         print("Not enough historical data to make an accurate prediction")
 
+forcast("AAPL", "01-01-2020")
