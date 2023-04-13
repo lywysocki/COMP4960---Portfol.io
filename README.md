@@ -1,4 +1,7 @@
-# COMP4960---Stock-Project
+# Portfol.io
+A web application which uses stock historical data to make a price prediction for the user based on the ticker which they have imputed into the application.
+
+## Prerequisites
 You will need: Python 3 (recommend latest version or 3.11), pip, a few hours for database download
 1. Clone the repository and switch to the "Josh" branch
 2. pip install -r REQUIREMENTS.txt
