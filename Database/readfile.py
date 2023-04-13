@@ -2,49 +2,49 @@ import pickle
 import mysql.connector
 
 # Opens each file and reads the data, saving it to a variable
-with open('file1.txt', 'rb') as handle:
+with open('Database/file1.txt', 'rb') as handle:
     data1 = handle.read()
 
-with open('file2.txt', 'rb') as handle:
+with open('Database/file2.txt', 'rb') as handle:
     data2 = handle.read()
 
-with open('file3.txt', 'rb') as handle:
+with open('Database/file3.txt', 'rb') as handle:
     data3 = handle.read()
 
-with open('file4.txt', 'rb') as handle:
+with open('Database/file4.txt', 'rb') as handle:
     data4 = handle.read()
 
-with open('file5.txt', 'rb') as handle:
+with open('Database/file5.txt', 'rb') as handle:
     data5 = handle.read()
 
-with open('file6.txt', 'rb') as handle:
+with open('Database/file6.txt', 'rb') as handle:
     data6 = handle.read()
 
-with open('file7.txt', 'rb') as handle:
+with open('Database/file7.txt', 'rb') as handle:
     data7 = handle.read()
 
-with open('file8.txt', 'rb') as handle:
+with open('Database/file8.txt', 'rb') as handle:
     data8 = handle.read()
 
-with open('file9.txt', 'rb') as handle:
+with open('Database/file9.txt', 'rb') as handle:
     data9 = handle.read()
 
-with open('file10.txt', 'rb') as handle:
+with open('Database/file10.txt', 'rb') as handle:
     data10 = handle.read()
 
-with open('file11.txt', 'rb') as handle:
+with open('Database/file11.txt', 'rb') as handle:
     data11 = handle.read()
 
-with open('file12.txt', 'rb') as handle:
+with open('Database/file12.txt', 'rb') as handle:
     data12 = handle.read()
 
-with open('file13.txt', 'rb') as handle:
+with open('Database/file13.txt', 'rb') as handle:
     data13 = handle.read()
 
-with open('file14.txt', 'rb') as handle:
+with open('Database/file14.txt', 'rb') as handle:
     data14 = handle.read()
 
-with open('file15.txt', 'rb') as handle:
+with open('Database/file15.txt', 'rb') as handle:
     data15 = handle.read()
 
 
