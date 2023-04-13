@@ -54,8 +54,6 @@ def get_date(date, results):
 
         if curr_month == month and curr_day == day:
             index = results.index(entry)
-            # print(index)
-            # print(entry)
             return index
 
         if curr_month == month:
@@ -69,11 +67,6 @@ def get_date(date, results):
             real += [entry]
             index = results.index(entry)
             break
-
-    # print(len(possible_dates))
-    # # print(real[0])
-    #
-    # print(index)
 
     return index
 
@@ -141,22 +134,13 @@ def fetch_data_from_date(stock, date):
     # convert the dictionary to a dataframe
     df = pd.DataFrame(data=desired_data, index=pd.DatetimeIndex(data=desired_dates))
 
-    # return df
+    return df
 
 
 # Function to fetch the closing prices for the input stock from database from input date and on
 # param: stock is the user input stock ticker
 # param: data is the user input data (string MM-DD-YYYY)
 def fetch_close_from_date(stock, date):
-    # split the input date into a list of size 3
-    date_string = date.split('-')
-    # pull month
-    month = int(date_string[0])
-    # pull day
-    day = int(date_string[1])
-    # pull year
-    year = int(date_string[2])
-
     # create table name to search for
     table = stock + "_table"
     # SQL command to pull data from all columns and rows in respective table
@@ -168,15 +152,8 @@ def fetch_close_from_date(stock, date):
     # store the length of the results list
     length = len(results)
 
-    # search through results list to find the tuple's index with the input date
-    for data in results:
-        # track the year, month, and day as int values to compare to user input date
-        data_year = int(data[1])
-        data_month = int(data[2])
-        data_day = int(data[3])
-
-        # pointer to the index in the results list of the input date
-        index = get_date(date, results)
+    # pointer to the index in the results list of the input date
+    index = get_date(date, results)
 
     # pointer for the close key's value in the desired data dictionary
     desired_close = []

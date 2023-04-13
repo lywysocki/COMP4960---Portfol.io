@@ -126,9 +126,7 @@ def market_data(stock):
         '52-wk Low': year_low
     }
 
-    df = pd.DataFrame(data, index=[0])
-
-    return df
+    return data
 
 
 # function to write retrieved data to database
