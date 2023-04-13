@@ -119,11 +119,6 @@ def fetch_data_from_date(stock, date):
         # add the date to the list
         desired_dates.append(dt)
 
-        # convert to timestamp
-        dt = datetime(int(current_tuple[0]), int(current_tuple[1]), int(current_tuple[2]), 0, 0)
-
-        # add the date to the list
-        desired_dates.append(dt)
 
     # dictionary to stored the desired data lists and convert to a dataframe
     desired_data = {

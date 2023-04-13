@@ -17,7 +17,7 @@ def base_page(request):
             # try:
             # forecast function expects a date, not a number of days in the past
             # if image problems try deleting here before calling
-            forecast(form.cleaned_data['ticker'], 365, 31)
+            forecast(form.cleaned_data['ticker'], 12, 31)
             #     raise Exception("Test ticker error message")
             # except ValueError as pred_err:
             #     context['pred_err'] = str(pred_err)

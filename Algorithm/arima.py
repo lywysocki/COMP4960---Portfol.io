@@ -1,21 +1,20 @@
 import numpy as np
-from Database.database import retrieve_stock_prices
-from Algorithm.Algorithm2 import prediction_slope
-from Database.query import fetch_data_from_date
-from Database.query import fetch_close_from_date
+from .Algorithm2 import prediction_slope
+from .query import fetch_close_from_date
 
-import os
 import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.stattools import adfuller, arma_order_select_ic
 from pmdarima.arima.utils import ndiffs
 from sklearn import metrics
+from datetime import date
+from dateutil.relativedelta import *
 import warnings
 
 warnings.filterwarnings("ignore")
 
 
-# gets the d value for ARIMA model
+# gets the d value for ARIMA model~~
 def get_d_value(dataset):
     # uses Augmented Dicky Fuller test to see if stock series is stationary
     dftest = adfuller(dataset)
@@ -53,8 +52,7 @@ def get_q_value(dataset):
 def difference(dataset, interval=1):
     diff = list()
     for i in range(interval, len(dataset)):
-        value = dataset[i] - dataset[i - interval]
-        diff.append(value)
+        diff.append(dataset[i] - dataset[i - interval])
     return np.array(diff)
 
 
@@ -69,23 +67,31 @@ def timeseries_evaluation_metrics_func(true_data, pred_data):
     def mean_absolute_percentage_error(data, pred):
         data, pred = np.array(data), np.array(pred)
         return np.mean(np.abs((data - pred) / data)) * 100
+
     print('Evaluation metric results:')
     MSE = metrics.mean_absolute_error(true_data, pred_data)
     RMSE = np.sqrt(metrics.mean_squared_error(true_data, pred_data))
     MAPE = mean_absolute_percentage_error(true_data, pred_data)
-    print(f'Accuracy percentage: {(100 -((MSE + RMSE + MAPE) / 3 )):.2f}%')
+    print(f'Accuracy percentage: {(100 - ((MSE + RMSE + MAPE) / 3)):.2f}%')
+
+
+# based on an inputted number of months, returns the past date of months ago
+def get_date(num):
+    return (date.today() - relativedelta(months=+num)).strftime('%m-%d-%Y')
 
 
 # outputs a graph of predicted stock closing prices
 # needs ~1.5 years of historical data to create a prediction
 # only a graph of historical data will be produced in 1.5 years of historical data is not available
-def forecast(ticker, hist_date, pred_days):
+def forecast(ticker, num_hist_months , pred_days):
     # gets dataframe for a specific stock starting from a specific date
-    dataset = fetch_close_from_date(ticker, hist_date)
-    graph_path = os.path.abspath("./stockmath/static/graph.png")
+    dataset = fetch_close_from_date(ticker, get_date(num_hist_months))
+    # gets dataframe for a specific stock's historical data for forcast predictions
+    dataset_hist_for_pred = fetch_close_from_date(ticker, '01-01-2000')
+
     try:
         # seasonal difference
-        x = dataset.values
+        x = dataset_hist_for_pred.values
         days_in_year = 365
         differenced = difference(x, days_in_year)
 
@@ -97,7 +103,7 @@ def forecast(ticker, hist_date, pred_days):
 
         # Create dates for prediction (the x-axis)
         temp = []
-        current_date = dataset.index.values[-1]
+        current_date = dataset_hist_for_pred.index.values[-1]
         for i in range(num_of_pred_days):
             temp.append(np.datetime64(current_date) + np.timedelta64(1, 'D'))
             current_date = temp[i]
@@ -120,7 +126,7 @@ def forecast(ticker, hist_date, pred_days):
             Y[i] *= slope
 
         # new dataset that houses hist_data to test against accuracy of prediction
-        test_data = dataset[int(len(dataset) - num_of_pred_days):]
+        test_data = dataset_hist_for_pred[int(len(dataset_hist_for_pred) - num_of_pred_days):]
         timeseries_evaluation_metrics_func(test_data, Y)
 
         # graphs the historical data and the forecast/prediction
@@ -132,18 +138,13 @@ def forecast(ticker, hist_date, pred_days):
         plt.plot(dataset.index.values, dataset.values, 'slategray', label='Historical Price')
         plt.plot(dates2, Y, 'palevioletred', label='Predicted Price')
         plt.legend()
-        # plt.show()
-        # plt.savefig(os.path.dirname(os.path.abspath("static/graph2.png")))
-        plt.savefig(graph_path)
+        plt.show()
     except ValueError:
         plt.figure(figsize=(11, 5))
         plt.title(ticker)
         plt.xlabel('Dates')
         plt.ylabel('Closing Prices')
-        plt.plot(dataset.index.values, dataset.values, 'slategray', label='Historical Price')
+        plt.plot(dataset.index.values, dataset.values, 'pink', label='Historical Price')
         plt.legend()
-        # plt.show()
-        plt.savefig(graph_path)
+        plt.show()
         raise ValueError("Not enough historical data to make an accurate prediction")
-
-
