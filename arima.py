@@ -87,13 +87,13 @@ def get_date(num):
 # only a graph of historical data will be produced in 1.5 years of historical data is not available
 def forcast(ticker, num_hist_months , pred_days):
     # gets dataframe for a specific stock starting from a specific date
-    print(get_date(num_hist_months))
-    print(type(get_date(num_hist_months)))
     dataset = fetch_close_from_date(ticker, get_date(num_hist_months))
+    # gets dataframe for a specific stock's historical data for forcast predictions
+    dataset_hist_for_pred = fetch_close_from_date(ticker, '01-01-2008')
 
     try:
         # seasonal difference
-        x = dataset.values
+        x = dataset_hist_for_pred.values
         days_in_year = 365
         differenced = difference(x, days_in_year)
 
@@ -105,7 +105,7 @@ def forcast(ticker, num_hist_months , pred_days):
 
         # Create dates for prediction (the x-axis)
         temp = []
-        current_date = dataset.index.values[-1]
+        current_date = dataset_hist_for_pred.index.values[-1]
         for i in range(num_of_pred_days):
             temp.append(np.datetime64(current_date) + np.timedelta64(1, 'D'))
             current_date = temp[i]
@@ -128,7 +128,7 @@ def forcast(ticker, num_hist_months , pred_days):
             Y[i] *= slope
 
         # new dataset that houses hist_data to test against accuracy of prediction
-        test_data = dataset[int(len(dataset) - num_of_pred_days):]
+        test_data = dataset_hist_for_pred[int(len(dataset_hist_for_pred) - num_of_pred_days):]
         timeseries_evaluation_metrics_func(test_data, Y)
 
         # graphs the historical data and the forecast/prediction

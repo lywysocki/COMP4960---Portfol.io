@@ -1,6 +1,6 @@
 import arima as arima
 
-arima.forcast("GOOGL", 1, 365)
+arima.forcast("AAPL", 1, 91)
 # arima.forcast("WMT", "01-01-2020", 365)
 # arima.forcast("SNAP", "01-01-2020", 365)
 # arima.forcast("SCHW", "01-01-2020", 365)
