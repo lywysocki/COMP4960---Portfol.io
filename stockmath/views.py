@@ -15,9 +15,9 @@ def base_page(request):
             context['form'] = form
             context['ticker'] = form.cleaned_data['ticker'].upper()
             # try:
-            # # DATA FETCHING BASED ON FORM INPUT GOES HERE
-            forecast(form.cleaned_data['ticker'], 90)
-            # # os.remove and shutil.copy to work with image
+            # forecast function expects a date, not a number of days in the past
+            # if image problems try deleting here before calling
+            forecast(form.cleaned_data['ticker'], 365, 31)
             #     raise Exception("Test ticker error message")
             # except ValueError as pred_err:
             #     context['pred_err'] = str(pred_err)

@@ -1,6 +1,6 @@
 import numpy as np
 from Database.database import retrieve_stock_prices
-from Algorithm2 import prediction_slope
+from Algorithm.Algorithm2 import prediction_slope
 from Database.query import fetch_data_from_date
 from Database.query import fetch_close_from_date
 
