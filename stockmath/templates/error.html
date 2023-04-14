@@ -35,7 +35,7 @@
                 <label for="predictiondiv" class="labelstyle"><u>Prediction</u></label>
                 <div class="prediction style1" id="predictiondiv">
                     {% if pred_err %}
-                        <p>Error message: {{ pred_err }}</p>
+                        <p>{{ pred_err }}</p>
                     {% endif %}
                 </div>
             </div>
@@ -43,21 +43,28 @@
         <div class="base2" id="graphdiv">
             <!-- <h2>Historical Timeframe: {{ hist }}</h2>
             <h2>Future Timeframe: {{ future }}</h2> -->
-            <div style="text-align:center">
-                <h1 style="color: red;">An error has occurred.</h1>
-                {% if tick_err %}
-                    <p>Error message: {{ tick_err }}</p>
-                {% endif %}
+            <!-- <h1 style="color:red;">An error has occured</h1> --> 
+            {% if graph_img and not tick_err %}
+                <img src="{% static graph_img %}" width="100%" height="100%" style="border-radius: 5px;">
+            {% elif tick_err %}
+            <div style="text-align: center;">
+                <h1 style="color:red">An error has occurred.</h1>
+                <p>{{ tick_err }}</p>
             </div>
+            {% endif %}
         </div>
         <div class="base3" id="statsdiv">
-            <!-- <label for="grid" class="labelstyle" style="display:block;text-align:center;">Previous Day Statistics</label>
+            <label for="grid" class="labelstyle" style="display:block;text-align:center;">Current Day Statistics</label>
             <div class="grid">    
                 <div class="grid-element">Open: {{ open }}</div>
-                <div class="grid-element">Close: {{ close }}</div>
                 <div class="grid-element">High: {{ high }}</div>
-                <div class="grid-element">Low: {{ low }}</div> -->
+                <div class="grid-element">Low: {{ low }}</div>
+                <div class="grid-element">Current Price: {{ cur_price }}</div>
+                <div class="grid-element">Market Cap: {{ mkt_cap }}</div>
+                <div class="grid-element">P/E Ratio: {{ pe_rat }}</div>
+                <div class="grid-element">Dividend: {{ div_yield }}</div>
+                <div class="grid-element">52-Week High: {{ 52h }}</div>
+                <div class="grid-element">52-Week Low: {{ 52l }}</div>
             </div>
-        </div>
     </body>
 </html>

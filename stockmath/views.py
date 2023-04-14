@@ -20,16 +20,6 @@ def base_page(request):
             context['ticker'] = form.cleaned_data['ticker'].upper()
             try:
                 context['pred_conf'] = do_forecast(form.cleaned_data['ticker'], form.cleaned_data['hist'], form.cleaned_data['future'])
-                market_dict = market_data(form.cleaned_data['ticker'].upper())
-                context['open'] = market_dict['Open']
-                context['high'] = market_dict['High']
-                context['low'] = market_dict['Low']
-                context['cur_price'] = market_dict['Current Price']
-                context['mkt_cap'] = market_dict['Mkt Cap']
-                context['pe_rat'] = market_dict['P/E Ratio']
-                context['div_yield'] = market_dict['Div Yield']
-                context['52h'] = market_dict['52-wk High']
-                context['52l'] = market_dict['52-wk Low']
             except ValueError as pred_err:
                 context['pred_err'] = str(pred_err)
                 render_page = 'error.html'
@@ -41,6 +31,16 @@ def base_page(request):
                     context['tick_err'] = str(tick_err)
                 render_page = 'error.html'
             finally:
+                market_dict = market_data(form.cleaned_data['ticker'].upper())
+                context['open'] = market_dict['Open']
+                context['high'] = market_dict['High']
+                context['low'] = market_dict['Low']
+                context['cur_price'] = market_dict['Current Price']
+                context['mkt_cap'] = market_dict['Mkt Cap']
+                context['pe_rat'] = market_dict['P/E Ratio']
+                context['div_yield'] = market_dict['Div Yield']
+                context['52h'] = market_dict['52-wk High']
+                context['52l'] = market_dict['52-wk Low']
                 context['graph_img'] = 'graph.png'
     else:
         form = InputForm()

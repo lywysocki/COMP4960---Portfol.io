@@ -115,15 +115,15 @@ def market_data(stock):
 
     # store all pointers in a dictionary to write to dataframe
     data = {
-        'Open': f'{open:.2f}',
-        'High': f'{high:.2f}',
-        'Low': f'{low:.2f}',
-        'Current Price': f'{curr:.2f}',
-        'Mkt Cap': f'{market_cap:.2f}',
-        'P/E Ratio': f'{pe:.2f}',
-        'Div Yield': f'{dividend:.2f}',
-        '52-wk High': f'{year_high:.2f}',
-        '52-wk Low': f'{year_low:.2f}'
+        'Open': open,
+        'High': high,
+        'Low': low,
+        'Current Price': curr,
+        'Mkt Cap': market_cap,
+        'P/E Ratio': pe,
+        'Div Yield': dividend,
+        '52-wk High': year_high,
+        '52-wk Low': year_low
     }
 
     return data
