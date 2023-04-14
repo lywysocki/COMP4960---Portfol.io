@@ -56,7 +56,9 @@ body {
 
 .grid {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto auto auto;
+    grid-gap: 10%;
+    padding-top: 2%;
 }
 
 .grid-element {

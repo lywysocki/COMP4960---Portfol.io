@@ -78,15 +78,16 @@ def timeseries_evaluation_metrics_func(true_data, pred_data):
 
 # based on an inputted number of months, returns the past date of months ago
 def get_date(num):
-    return (date.today() - relativedelta(months=+num)).strftime('%m-%d-%Y')
+    return (date.today() - relativedelta(days=+num)).strftime('%m-%d-%Y')
 
 
 # outputs a graph of predicted stock closing prices
 # needs ~1.5 years of historical data to create a prediction
 # only a graph of historical data will be produced in 1.5 years of historical data is not available
-def forecast(ticker, num_hist_months , pred_days):
+# generates and saves a graph figure, returns confidence in prediction
+def forecast(ticker, num_hist_days , pred_days):
     # gets dataframe for a specific stock starting from a specific date
-    dataset = fetch_close_from_date(ticker, get_date(num_hist_months))
+    dataset = fetch_close_from_date(ticker, get_date(num_hist_days))
     # gets dataframe for a specific stock's historical data for forcast predictions
     dataset_hist_for_pred = fetch_close_from_date(ticker, '01-01-2000')
     graph_path = os.path.abspath("./stockmath/static/graph.png")
@@ -129,7 +130,7 @@ def forecast(ticker, num_hist_months , pred_days):
 
         # new dataset that houses hist_data to test against accuracy of prediction
         test_data = dataset_hist_for_pred[int(len(dataset_hist_for_pred) - num_of_pred_days):]
-        timeseries_evaluation_metrics_func(test_data, Y)
+        accuracy = timeseries_evaluation_metrics_func(test_data, Y)
 
         # graphs the historical data and the forecast/prediction
         plt.figure(figsize=(11, 5))
@@ -142,6 +143,7 @@ def forecast(ticker, num_hist_months , pred_days):
         plt.legend()
         # plt.show()
         plt.savefig(graph_path)
+        return accuracy
     except ValueError:
         plt.figure(figsize=(11, 5))
         plt.title(ticker)

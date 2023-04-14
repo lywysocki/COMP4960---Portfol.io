@@ -1,11 +1,15 @@
 from django.shortcuts import render
 from Algorithm.arima import forecast
+from Database.database import market_data
 from .forms import InputForm
-import os
+from datetime import date
+from dateutil.relativedelta import relativedelta
+import mysql.connector
 
 # Create your views here.
 
 def base_page(request):
+    render_page = 'index.html'
     # request has a filled form
     if request.method == 'POST':
         # "bind" the form data
@@ -14,47 +18,76 @@ def base_page(request):
             context = dict(**form.cleaned_data)
             context['form'] = form
             context['ticker'] = form.cleaned_data['ticker'].upper()
-            # try:
-            # forecast function expects a date, not a number of days in the past
-            # if image problems try deleting here before calling
-            forecast(form.cleaned_data['ticker'], 12, 31)
-            #     raise Exception("Test ticker error message")
-            # except ValueError as pred_err:
-            #     context['pred_err'] = str(pred_err)
-            # except Exception as tick_err:
-            #     context['tick_err'] = str(tick_err)
-            # finally:
-            #     context['open'] = "--"
-            #     context['close'] = "--"
-            #     context['high'] = "--"
-            #     context['low'] = "--"
-            #     return render(request, 'error.html', context)
-            context['open'] = 20
-            context['close'] = 30
-            context['high'] = 40
-            context['low'] = 10
-            context['pred_conf'] = 80
-            context['graph_img'] = 'graph.png'
-        # add an else here so context is defined when ticker is invalid   
+            try:
+                context['pred_conf'] = do_forecast(form.cleaned_data['ticker'], form.cleaned_data['hist'], form.cleaned_data['future'])
+                market_dict = market_data(form.cleaned_data['ticker'].upper())
+                context['open'] = market_dict['Open']
+                context['high'] = market_dict['High']
+                context['low'] = market_dict['Low']
+                context['cur_price'] = market_dict['Current Price']
+                context['mkt_cap'] = market_dict['Mkt Cap']
+                context['pe_rat'] = market_dict['P/E Ratio']
+                context['div_yield'] = market_dict['Div Yield']
+                context['52h'] = market_dict['52-wk High']
+                context['52l'] = market_dict['52-wk Low']
+            except ValueError as pred_err:
+                context['pred_err'] = str(pred_err)
+                render_page = 'error.html'
+            except Exception as tick_err:
+                # MySQL error: 1146 Table 'tablename' doesn't exist
+                if str(tick_err).startswith("1146"):
+                    context['tick_err'] = "Ticker does not exist in database."
+                else:
+                    context['tick_err'] = str(tick_err)
+                render_page = 'error.html'
+            finally:
+                context['graph_img'] = 'graph.png'
     else:
         form = InputForm()
         context = {}
         context['form'] = form
+        context['pred_conf'] = "X"
         context['open'] = "--"
-        context['close'] = "--"
         context['high'] = "--"
         context['low'] = "--"
-        context['pred_conf'] = "X"
-    
-    return render(request, 'index.html', context)
+        context['cur_price'] = "--"
+        context['mkt_cap'] = "--"
+        context['pe_rat'] = "--"
+        context['div_yield'] = "--"
+        context['52h'] = "--"
+        context['52l'] = "--"
+    return render(request, render_page, context)
 
 def error_page(request):
     form = InputForm()
     context = {}
-    context['form'] = form
-    context['open'] = "--"
-    context['close'] = "--"
-    context['high'] = "--"
-    context['low'] = "--"
-    context['pred_conf'] = "X"
     return render(request, 'error.html', context)
+
+def do_forecast(ticker, hist, future):
+    current_day = date.today()
+    hist_day = ''
+    future_day = ''
+    if hist == '5yH':
+        hist_day = current_day - relativedelta(years=5)
+    elif hist == '1yH':
+        hist_day = current_day - relativedelta(years=1)
+    elif hist == '6mH':
+        hist_day = current_day - relativedelta(months=6)
+    elif hist == '1mH':
+        hist_day = current_day - relativedelta(months=1)
+    else:
+        #should never run
+        raise Exception("Invalid historical timeframe selected!")
+    if future == '1yF':
+        future_day = current_day + relativedelta(years=1)
+    elif future == '6mF':
+        future_day = current_day + relativedelta(months=6)
+    elif future == '3mF':
+        future_day = current_day + relativedelta(months=3)
+    elif future == '1mF':
+        future_day = current_day + relativedelta(months=1)
+    else:
+        #should never run
+        raise Exception("Invalid future timeframe selected!")
+    # returns confidence
+    return forecast(ticker, (current_day-hist_day).days, (future_day-current_day).days)
