@@ -126,6 +126,15 @@ def market_data(stock):
         '52-wk Low': year_low
     }
 
+    # formatting
+    for k, v in data.items():
+        if v is None:
+            data[k] = "?missing?"
+        elif k == "Mkt Cap":
+            continue
+        else:
+            data[k] = f'{v:.2f}'
+
     return data
 
 

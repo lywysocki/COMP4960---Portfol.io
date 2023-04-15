@@ -41,7 +41,7 @@
             <h2>Future Timeframe: {{ future }}</h2> -->
             {% if graph_img %}
                 <img src="{% static graph_img %}" width="100%" height="100%" style="border-radius: 5px;">
-                <div class="imagelabel">Prediction confidence: {{ pred_conf }}</div>
+                <div class="imagelabel">Prediction confidence: {{ pred_conf }}%</div>
             {% else %}
             <div style="text-align: center;">
                 <h1>Welcome to Portfol.io!</h1>
@@ -58,7 +58,7 @@
                 <div class="grid-element">Current Price: {{ cur_price }}</div>
                 <div class="grid-element">Market Cap: {{ mkt_cap }}</div>
                 <div class="grid-element">P/E Ratio: {{ pe_rat }}</div>
-                <div class="grid-element">Dividend: {{ div_yield }}</div>
+                <div class="grid-element">Dividend: {{ div_yield }}%</div>
                 <div class="grid-element">52-Week High: {{ 52h }}</div>
                 <div class="grid-element">52-Week Low: {{ 52l }}</div>
             </div>
