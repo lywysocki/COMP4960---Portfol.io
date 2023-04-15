@@ -1,7 +1,7 @@
 import numpy as np
 from Algorithm.Algorithm2 import prediction_slope
 from Algorithm.query import fetch_close_from_date
-
+import os
 import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.stattools import adfuller, arma_order_select_ic
@@ -123,8 +123,7 @@ def forecast(ticker, num_hist_days , pred_days):
     # gets dataframe for a specific stock's historical data for forcast predictions
     #dataset_hist_for_pred = retrieve_stock_prices(ticker, '01-01-2000')
     dataset_hist_for_pred = fetch_close_from_date(ticker, '01-01-2000')
-    #graph_path = os.path.abspath("./stockmath/static/graph.png")
-    graph_path = 'C:\\Users\\Henry\\PycharmProjects\\COMP4960---PortfolioFinal2\\stockmath\\static\\graph.png'
+    graph_path = os.path.abspath("./stockmath/static/graph.png")
 
     try:
         # seasonal difference
@@ -173,9 +172,7 @@ def forecast(ticker, num_hist_days , pred_days):
 
         last_historical_price = dataset.values[-1]
         last_prediction_price = Y[len(Y) - 1]
-
         rec = recommendation(last_historical_price, last_prediction_price, prediction_max, prediction_min, pred_days)
-        print(rec)
 
 
         # new dataset that houses hist_data to test against accuracy of prediction
@@ -193,7 +190,8 @@ def forecast(ticker, num_hist_days , pred_days):
         plt.legend()
         # plt.show()
         plt.savefig(graph_path)
-        return accuracy
+        #please do not change these key names
+        return {"pred_conf": accuracy, "rec": rec}
     except ValueError:
         plt.figure(figsize=(11, 5))
         plt.title(ticker)

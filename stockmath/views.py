@@ -19,7 +19,8 @@ def base_page(request):
             context['form'] = form
             context['ticker'] = form.cleaned_data['ticker'].upper()
             try:
-                context['pred_conf'] = do_forecast(form.cleaned_data['ticker'], form.cleaned_data['hist'], form.cleaned_data['future'])
+                conf_and_rec = do_forecast(form.cleaned_data['ticker'], form.cleaned_data['hist'], form.cleaned_data['future'])
+                context.update(**conf_and_rec)
             except ValueError as pred_err:
                 context['pred_err'] = str(pred_err)
                 render_page = 'error.html'
@@ -89,5 +90,5 @@ def do_forecast(ticker, hist, future):
     else:
         #should never run
         raise Exception("Invalid future timeframe selected!")
-    # returns confidence
+    # returns stats dictionary
     return forecast(ticker, (current_day-hist_day).days, (future_day-current_day).days)
