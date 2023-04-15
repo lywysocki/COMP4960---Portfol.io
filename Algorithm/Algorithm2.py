@@ -1,11 +1,7 @@
-import finnhub
 import pandas as pd
 import datetime
-from datetime import date
-from dateutil.relativedelta import *
 import time
-from .query import fetch_data_from_date
-# from Database.database import retrieve_stock_prices
+from Algorithm.query import fetch_data_from_date
 
 # dataframe print formatting
 pd.set_option('display.max_columns', None)
@@ -16,41 +12,8 @@ now = datetime.datetime.now()
 unix_now = int(time.mktime(now.timetuple()))
 
 
-def time_offset(date, num_days):
-    return date - num_days*86400
-
-
-# ################ FOR TESTING ################ #
-def get_ticker_df(ticker):
-    finnhub_client = finnhub.Client(api_key="cfj73ghr01que34nr220cfj73ghr01que34nr22g")
-
-    #df = pd.DataFrame(finnhub_client.stock_candles(symbol, 'D', time_offset(unix_now, 730), unix_now))
-    df = pd.DataFrame(finnhub_client.stock_candles(ticker, 'D', time_offset(unix_now, 1600), unix_now))
-
-    years = []
-    months = []
-    days = []
-
-    for timestamp in df["t"]:
-        date_string = str(datetime.datetime.fromtimestamp(timestamp))
-        date_to_add = date_string.split(' ')
-        sub_date_to_add = date_to_add[0].split('-')
-        years += [sub_date_to_add[0]]
-        months += [sub_date_to_add[1]]
-        days += [sub_date_to_add[2]]
-
-    data = {
-        'Year': years,
-        'Month': months,
-        'Day': days,
-        'Close': df["c"]
-    }
-
-    return pd.DataFrame(data)
-
-
-# #################### END TESTING ########################### #
-#tickerdf = get_ticker_df("AAPL")
+def time_offset(date1, num_days):
+    return date1 - num_days*86400
 
 
 # dataframe length must be greater than requested num_days
@@ -98,68 +61,61 @@ def sma_cross(dataframe, x_days_ago):
     return golden_cross, death_cross
 
 
-# multiplier to gold/death cross slope results?
-def slope(ema50_slope, ema200_slope):
+# utilizes 200 sma and 50 sma to determine a future slope
+def slope(sma50_slope, sma200_slope):
     ret = 1
 
     # if the stock is increasing or decreasing too fast, predict flattening
-    if (ema200_slope >= 70 and ema50_slope >= 15) or (ema200_slope <= -70 and ema50_slope <= -15):
-        ret = ema200_slope * .1
-    elif (ema200_slope >= 50 and ema50_slope >= 10) or (ema200_slope <= -50 and ema50_slope <= -10):
-        ret = ema200_slope * .2
-    elif (ema200_slope >= 40 and ema50_slope >= 10) or (ema200_slope <= -40 and ema50_slope <= -10):
-        ret = ema200_slope * .25
+    if (sma200_slope >= 70 and sma50_slope >= 15) or (sma200_slope <= -70 and sma50_slope <= -15):
+        ret = sma200_slope * .1
+    elif (sma200_slope >= 50 and sma50_slope >= 10) or (sma200_slope <= -50 and sma50_slope <= -10):
+        ret = sma200_slope * .2
+    elif (sma200_slope >= 40 and sma50_slope >= 10) or (sma200_slope <= -40 and sma50_slope <= -10):
+        ret = sma200_slope * .25
 
-    elif (ema200_slope >= 30 and ema50_slope >= 5) or (ema200_slope <= -30 and ema50_slope <= -5):
-        ret = ema200_slope * .45
-    elif (ema200_slope >= 20 and ema50_slope >= 4) or (ema200_slope <= -20 and ema50_slope <= -4):
-        ret = ema200_slope * .65
+    elif (sma200_slope >= 30 and sma50_slope >= 5) or (sma200_slope <= -30 and sma50_slope <= -5):
+        ret = sma200_slope * .45
+    elif (sma200_slope >= 20 and sma50_slope >= 4) or (sma200_slope <= -20 and sma50_slope <= -4):
+        ret = sma200_slope * .65
 
     # if a stock has increased or decreased too much and 50 sma has opposite slope, weigh 200 sma
     # this can be seen as a dip, trend continues
-    elif (ema200_slope >= 70 and ema50_slope <= -15) or (ema200_slope <= -70 and ema50_slope >= 15):
-        ret = ema200_slope * .2
-    elif (ema200_slope >= 50 and ema50_slope <= -10) or (ema200_slope <= -50 and ema50_slope >= 10):
-        ret = ema200_slope * .25
-    elif (ema200_slope >= 40 and ema50_slope <= -10) or (ema200_slope <= -40 and ema50_slope >= 10):
-        ret = ema200_slope * .3
+    elif (sma200_slope >= 70 and sma50_slope <= -15) or (sma200_slope <= -70 and sma50_slope >= 15):
+        ret = sma200_slope * .2
+    elif (sma200_slope >= 50 and sma50_slope <= -10) or (sma200_slope <= -50 and sma50_slope >= 10):
+        ret = sma200_slope * .25
+    elif (sma200_slope >= 40 and sma50_slope <= -10) or (sma200_slope <= -40 and sma50_slope >= 10):
+        ret = sma200_slope * .3
 
-    elif (ema200_slope >= 30 and ema50_slope <= -5) or (ema200_slope <= -30 and ema50_slope >= 5):
-        ret = ema200_slope * .45
-    elif (ema200_slope >= 20 and ema50_slope <= -4) or (ema200_slope <= -20 and ema50_slope >= 4):
-        ret = ema200_slope * .65
+    elif (sma200_slope >= 30 and sma50_slope <= -5) or (sma200_slope <= -30 and sma50_slope >= 5):
+        ret = sma200_slope * .45
+    elif (sma200_slope >= 20 and sma50_slope <= -4) or (sma200_slope <= -20 and sma50_slope >= 4):
+        ret = sma200_slope * .65
 
     # if 50 sma volatile but 200 is not, heavily weigh 50 sma
     # if 200 sma slope positive and 50 sma slope positive
-    elif (ema200_slope >= 0 and ema50_slope >= 40) or (ema200_slope <= 0 and ema50_slope <= -40):
-        ret = ema50_slope * .25
-    elif (ema200_slope >= 0 and ema50_slope >= 30) or (ema200_slope <= 0 and ema50_slope <= -30):
-        ret = ema50_slope * .45
-    elif (ema200_slope >= 0 and ema50_slope >= 20) or (ema200_slope <= 0 and ema50_slope <= -20):
-        ret = ema50_slope * .6
+    elif (sma200_slope >= 0 and sma50_slope >= 40) or (sma200_slope <= 0 and sma50_slope <= -40):
+        ret = sma50_slope * .25
+    elif (sma200_slope >= 0 and sma50_slope >= 30) or (sma200_slope <= 0 and sma50_slope <= -30):
+        ret = sma50_slope * .45
+    elif (sma200_slope >= 0 and sma50_slope >= 20) or (sma200_slope <= 0 and sma50_slope <= -20):
+        ret = sma50_slope * .6
 
     # if 50 sma is volatile and 200 sma opposite sign
     # if 200 slope positive and 50 slope negative
-    elif (ema200_slope >= 0 and ema50_slope <= -40) or (ema200_slope <= 0 and ema50_slope >= 40):
-        ret = ema50_slope * .25
-    elif (ema200_slope >= 0 and ema50_slope <= -30) or (ema200_slope <= 0 and ema50_slope >= 30):
-        ret = ema50_slope * .45
-    elif (ema200_slope >= 0 and ema50_slope <= -20) or (ema200_slope <= 0 and ema50_slope >= 20):
-        ret = ema50_slope * .6
+    elif (sma200_slope >= 0 and sma50_slope <= -40) or (sma200_slope <= 0 and sma50_slope >= 40):
+        ret = sma50_slope * .25
+    elif (sma200_slope >= 0 and sma50_slope <= -30) or (sma200_slope <= 0 and sma50_slope >= 30):
+        ret = sma50_slope * .45
+    elif (sma200_slope >= 0 and sma50_slope <= -20) or (sma200_slope <= 0 and sma50_slope >= 20):
+        ret = sma50_slope * .6
 
     else:
-        ret = (ema50_slope * .7) + (ema200_slope * .3)
-
-
-    # if the 50 sma is too volatile
-    # elif (ema50_slope >= 30) or (ema50_slope <= -30):
-    # if 200 is negative and 50 is -30, weight 200 more, flattening
-    # elif ema200_slope >= 0 and ema50_slope >= 30
+        ret = (sma50_slope * .7) + (sma200_slope * .3)
 
     return ret
 
 
-# old @ line 432 in scratch
 # determine a future daily slope from number of crosses
 def future_slope(sma_cross_result, ema50_slope, ema200_slope):
 
@@ -185,28 +141,12 @@ def future_slope(sma_cross_result, ema50_slope, ema200_slope):
     return future_slope_var
 
 
-# TESTING METHOD
-# return the percent change in stock price between current day and x trading days ago
-# from is further away, to is recent
-def percent_change(ticker, from_date_offset, to_date_offset):
-
-    # replace with database code
-    tickerdf = get_ticker_df(ticker)
-    #tickerdf = fetch_data_from_date(ticker, "01-01-2020")
-
-    index = len(tickerdf)-1  # last index of tickerdf, also most recent date
-
-    # print(tickerdf["Close"][index-x_days_ago])
-    # print(tickerdf["Close"][index])
-
-    return (tickerdf["Close"][index-to_date_offset] / tickerdf["Close"][index-from_date_offset] - 1) * 100
-
-
 # This returns the future expected slope for a given ticker over a 1-year period
 def prediction_slope(ticker):
     # tickerdf = get_ticker_df(ticker)
-    tickerdf = fetch_data_from_date(ticker, (date.today() - relativedelta(months=+12)).strftime('%m-%d-%Y'))
-    # tickerdf = retrieve_stock_prices(ticker, "01-01-2020", 0)
+    # print(date.today() - relativedelta(months=+12)).strftime('%m-%d-%Y')
+    tickerdf = fetch_data_from_date(ticker, "01-01-2018")
+    # tickerdf = retrieve_stock_prices(ticker, "01-01-2020")
 
     # OFFSET FOR TESTING PURPOSES, starts prediction from x days ago, x = offset
     offset = 0

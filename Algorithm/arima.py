@@ -1,9 +1,8 @@
 import numpy as np
-from .Algorithm2 import prediction_slope
-from .query import fetch_close_from_date
+from Algorithm.Algorithm2 import prediction_slope
+from Algorithm.query import fetch_close_from_date
 
 import matplotlib.pyplot as plt
-import os
 from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.stattools import adfuller, arma_order_select_ic
 from pmdarima.arima.utils import ndiffs
@@ -81,16 +80,51 @@ def get_date(num):
     return (date.today() - relativedelta(days=+num)).strftime('%m-%d-%Y')
 
 
+# prediction min, max, num days in prediction
+def recommendation(last_historical_price, last_prediction_price, p_min, p_max, p_days):
+    # BUY / SELL / HOLD recommendation
+    rec = ""
+
+    # slope between current date and last prediction date
+    percent_difference = (last_prediction_price / last_historical_price - 1) * 100
+
+    # daily slope between current date and last prediction date
+    daily_percent = percent_difference / p_days
+
+    # difference between prediction max and last prediction date
+    max_difference = (last_prediction_price / p_max - 1) * 100
+
+    # difference between prediction min and last prediction date
+    min_difference = (last_prediction_price / p_min - 1) * 100
+
+    # if the daily percent is annualized 15% growth and the last prediction is down 10% from prediction high
+    if daily_percent > .06 and max_difference < -10:
+        rec = "BUY"
+    elif daily_percent > .03 and max_difference < 0:
+        rec = "BUY"
+    elif daily_percent > .06 and max_difference > 10:
+        rec = "HOLD"
+    elif daily_percent > .03 and max_difference >= 0:
+        rec = "HOLD"
+    else:
+        rec = "SELL"
+
+    return rec
+
+
 # outputs a graph of predicted stock closing prices
 # needs ~1.5 years of historical data to create a prediction
 # only a graph of historical data will be produced in 1.5 years of historical data is not available
 # generates and saves a graph figure, returns confidence in prediction
 def forecast(ticker, num_hist_days , pred_days):
     # gets dataframe for a specific stock starting from a specific date
+    #dataset = retrieve_stock_prices(ticker, get_date(num_hist_days))
     dataset = fetch_close_from_date(ticker, get_date(num_hist_days))
     # gets dataframe for a specific stock's historical data for forcast predictions
+    #dataset_hist_for_pred = retrieve_stock_prices(ticker, '01-01-2000')
     dataset_hist_for_pred = fetch_close_from_date(ticker, '01-01-2000')
-    graph_path = os.path.abspath("./stockmath/static/graph.png")
+    #graph_path = os.path.abspath("./stockmath/static/graph.png")
+    graph_path = 'C:\\Users\\Henry\\PycharmProjects\\COMP4960---PortfolioFinal2\\stockmath\\static\\graph.png'
 
     try:
         # seasonal difference
@@ -124,9 +158,25 @@ def forecast(ticker, num_hist_days , pred_days):
         # Adding sma prediction slope to arima
         slope = 1 + prediction_slope(ticker)
 
-        # add Y modification here
+        # highest value in prediction graph
+        prediction_max = Y[0]
+        # lowest value in prediction graph
+        prediction_min = Y[0]
+
+        # Modifies the Y slope and finds the largest/smallest values
         for i in range(1, len(Y)):
             Y[i] *= slope
+            if Y[i] > prediction_max:
+                prediction_max = Y[i]
+            if Y[i] < prediction_min:
+                prediction_min = Y[i]
+
+        last_historical_price = dataset.values[-1]
+        last_prediction_price = Y[len(Y) - 1]
+
+        rec = recommendation(last_historical_price, last_prediction_price, prediction_max, prediction_min, pred_days)
+        print(rec)
+
 
         # new dataset that houses hist_data to test against accuracy of prediction
         test_data = dataset_hist_for_pred[int(len(dataset_hist_for_pred) - num_of_pred_days):]

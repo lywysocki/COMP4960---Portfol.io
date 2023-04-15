@@ -126,11 +126,13 @@ def market_data(stock):
         '52-wk Low': year_low
     }
 
-    # formatting
+    # loop to check if a value is None Type
+    # if value is None Type change to '--' to represent no data
+    # else format the number to two decimal places
     for k, v in data.items():
         if v is None:
-            data[k] = "?missing?"
-        elif k == "Mkt Cap":
+            data[k] = '--'
+        elif k == 'Mkt Cap':
             continue
         else:
             data[k] = f'{v:.2f}'
@@ -209,5 +211,3 @@ def write_to_db(stock, start_date):
         pass
 
     pass
-
-# print(retrieve_stock_prices('AAPL', '03-29-2023'))
