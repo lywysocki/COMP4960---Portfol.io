@@ -8,7 +8,7 @@ import mysql.connector
 
 # Create your views here.
 
-def base_page(request):
+def generate_page(request):
     render_page = 'index.html'
     # request has a filled form
     if request.method == 'POST':
@@ -17,7 +17,6 @@ def base_page(request):
         if form.is_valid():
             context = dict(**form.cleaned_data)
             context['form'] = form
-            context['ticker'] = form.cleaned_data['ticker'].upper()
             try:
                 conf_and_rec = do_forecast(form.cleaned_data['ticker'], form.cleaned_data['hist'], form.cleaned_data['future'])
                 context.update(**conf_and_rec)
@@ -58,11 +57,6 @@ def base_page(request):
         context['52h'] = "--"
         context['52l'] = "--"
     return render(request, render_page, context)
-
-def error_page(request):
-    form = InputForm()
-    context = {}
-    return render(request, 'error.html', context)
 
 def do_forecast(ticker, hist, future):
     current_day = date.today()

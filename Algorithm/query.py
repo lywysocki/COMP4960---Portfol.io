@@ -6,7 +6,7 @@ import pandas as pd
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="Password1!",
+    password="Portfol.io2023",
     database="djangodatabase"
 )
 
