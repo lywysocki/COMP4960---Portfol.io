@@ -81,6 +81,7 @@ body {
 
 .prediction {
     position: relative;
+    text-align: center;
     width: 95%;
     height: 25%;
 }
