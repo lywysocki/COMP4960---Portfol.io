@@ -3,9 +3,8 @@ A web application which uses stock historical data to make a price prediction fo
 
 ## Prerequisites
 You will need: Python 3 (recommend latest version or 3.11), pip, a few hours for database download
-1. Clone the repository and switch to the "Josh" branch
-2. pip install -r REQUIREMENTS.txt
-3. Download mySQL server. For windows, use this link: https://dev.mysql.com/downloads/ and the "MySQL installer for windows" link at the bottom.
-4. Run readfile.py in the Database folder to download the database
-5. Switch back to the main directory and call python manage.py runserver_plus --cert-file cert.crt  This will generate an HTTPS certificate for the website.
-6. Open a browser window to https://127.0.0.1:8000 and skip any trustworthiness warnings. These happen because browsers don't trust self-signed certificates, but it'll be fine. 
+1. Clone the repository 
+2. https://dev.mysql.com/downloads/mysql/ Head to this link, select the OS corresponding to your machine, and download. If prompted for additional features, click "No thanks, just start my download." Accept all default settings. When prompted to enter a password for the root user enter “Portfol.io2023”
+3. Open the root directory of the repository and call `python project_setup.py` from the terminal.
+4. Call `python manage.py runserver_plus --cert-file cert.crt` to run the project with HTTPS.
+5. Open a browser window to https://127.0.0.1:8000 and skip any trustworthiness warnings. These happen because browsers don't trust self-signed certificates, but it'll be fine. 
