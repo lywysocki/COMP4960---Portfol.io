@@ -100,9 +100,6 @@ def recommendation(last_historical_price, last_prediction_price, p_min, p_max, p
     # difference between prediction max and last prediction date
     max_difference = (last_prediction_price / p_max - 1) * 100
 
-    # difference between prediction min and last prediction date
-    min_difference = (last_prediction_price / p_min - 1) * 100
-
     # if the daily percent is annualized 15% growth and the last prediction is down 10% from prediction high
     if daily_percent > .06 and max_difference < -10:
         rec = "BUY"
@@ -120,7 +117,7 @@ def recommendation(last_historical_price, last_prediction_price, p_min, p_max, p
 
 # outputs a graph of predicted stock closing prices
 # needs ~1.5 years of historical data to create a prediction
-# only a graph of historical data will be produced in 1.5 years of historical data is not available
+# only a graph of historical data will be produced if 1.5 years of historical data is not available
 # generates and saves a graph figure, returns confidence in prediction
 def forecast(ticker, num_hist_days, pred_days):
     # gets dataframe for a specific stock starting from a specific date
@@ -139,19 +136,17 @@ def forecast(ticker, num_hist_days, pred_days):
         model = ARIMA(differenced, order=(get_p_value(differenced), get_d_value(differenced), get_q_value(differenced)))
         model_fit = model.fit()
 
-        num_of_pred_days = pred_days
-
         # Create dates for prediction (the x-axis)
         temp = []
         current_date = dataset_hist_for_pred.index.values[-1]
-        for i in range(num_of_pred_days):
+        for i in range(pred_days):
             temp.append(np.datetime64(current_date) + np.timedelta64(1, 'D'))
             current_date = temp[i]
         dates2 = np.array(temp)
 
         # multi-step forecast of future stock prices
         hist = x.tolist()
-        for y_hat in model_fit.forecast(steps=num_of_pred_days):
+        for y_hat in model_fit.forecast(steps=pred_days):
             if inverse_difference(hist, y_hat, days_in_year) < 0:
                 hist.append(abs(inverse_difference(hist, y_hat, days_in_year)))
             else:
@@ -179,7 +174,7 @@ def forecast(ticker, num_hist_days, pred_days):
         rec = recommendation(last_historical_price, last_prediction_price, prediction_max, prediction_min, pred_days)
 
         # new dataset that houses hist_data to test against accuracy of prediction
-        test_data = dataset_hist_for_pred[int(len(dataset_hist_for_pred) - num_of_pred_days):]
+        test_data = dataset_hist_for_pred[int(len(dataset_hist_for_pred) - pred_days):]
         accuracy = timeseries_evaluation_metrics_func(test_data, Y)
 
         # graphs the historical data and the forecast/prediction
