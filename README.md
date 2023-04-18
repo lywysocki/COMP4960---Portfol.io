@@ -1,5 +1,5 @@
 # Portfol.io
-A web application which uses stock historical data to make a price prediction for the user based on the ticker which they have imputed into the application.
+A web application which uses stocks' historical data to make a price prediction for the user based on the ticker and timeframe which they have imputed into the application.
 
 ## Prerequisites
 You will need: Python (recommend latest version or 3.11), pip, and a few hours for database download
