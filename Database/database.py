@@ -128,12 +128,15 @@ def market_data(stock):
 
     # loop to check if a value is None Type
     # if value is None Type change to '--' to represent no data
+    # if value is a special case with additional formatting, add it
     # else format the number to two decimal places
     for k, v in data.items():
         if v is None:
             data[k] = '--'
         elif k == 'Mkt Cap':
-            continue
+            data[k] = f'{v}M'
+        elif k == 'Div Yield':
+            data[k] = f'{v}%'
         else:
             data[k] = f'{v:.2f}'
 

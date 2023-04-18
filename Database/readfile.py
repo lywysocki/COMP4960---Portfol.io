@@ -87,7 +87,7 @@ all_data.update(d15)
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='Password1!'
+    password='Portfol.io2023'
 )
 
 # pointer variable to connect to database to exectue SQL commands
