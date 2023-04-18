@@ -69,7 +69,7 @@ def inverse_difference(history, y_hat, interval=1):
 
 # evaluates accuracy of the predictions via the average of mean squared error, root-mean-square error,
 # and mean absolute percentage error
-def timeseries_evaluation_metrics_func(true_data, pred_data):
+def calculate_accuracy(true_data, pred_data):
     def mean_absolute_percentage_error(data, pred):
         data, pred = np.array(data), np.array(pred)
         return np.mean(np.abs((data - pred) / data)) * 100
@@ -180,7 +180,7 @@ def forecast(ticker, num_hist_days, pred_days):
 
         # new dataset that houses hist_data to test against accuracy of prediction
         test_data = dataset_hist_for_pred[int(len(dataset_hist_for_pred) - num_of_pred_days):]
-        accuracy = timeseries_evaluation_metrics_func(test_data, Y)
+        accuracy = calculate_accuracy(test_data, Y)
 
         # graphs the historical data and the forecast/prediction
         plt.figure(figsize=(11, 5))

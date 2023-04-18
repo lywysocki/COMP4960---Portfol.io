@@ -4,7 +4,6 @@ from Database.database import market_data
 from .forms import InputForm
 from datetime import date
 from dateutil.relativedelta import relativedelta
-import mysql.connector
 
 # Create your views here.
 
