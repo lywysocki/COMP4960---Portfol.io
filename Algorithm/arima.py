@@ -192,7 +192,7 @@ def forecast(ticker, num_hist_days, pred_days):
         plt.title(ticker.upper())
         plt.xlabel('Dates')
         plt.ylabel('Closing Prices')
-        plt.plot(dataset.index.values, dataset.values, 'pink', label='Historical Price')
+        plt.plot(dataset.index.values, dataset.values, 'slategray', label='Historical Price')
         plt.legend()
         plt.savefig(graph_path)
         raise ValueError("Not enough historical data to make an accurate prediction")
