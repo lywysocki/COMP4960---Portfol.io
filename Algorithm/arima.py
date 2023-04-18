@@ -1,6 +1,5 @@
 # uses 1.5 or more years of stocks' historical closing values to create an ARIMA forcast for future closing prices
 
-
 # Algo Imports
 from Algorithm.Algorithm2 import prediction_slope
 from Algorithm.query import fetch_close_from_date
