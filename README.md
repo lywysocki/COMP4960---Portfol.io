@@ -1,8 +1,8 @@
 # Portfol.io
-A web application which uses stock historical data to make a price prediction for the user based on the ticker which they have imputed into the application.
+A web application which uses stocks' historical data to make a price prediction for the user based on the ticker and timeframe which they have imputed into the application.
 
 ## Prerequisites
-You will need: Python (recommend latest version or 3.11), pip, a few hours for database download
+You will need: Python (recommend latest version or 3.11), pip, and a few hours for database download
 1. Clone the repository 
 2. https://dev.mysql.com/downloads/mysql/ Head to this link, select the OS corresponding to your machine, and download. If on Windows, install the version labeled "mysql-installer-web-community-X.X.XX.X.msi".  During the install, if prompted for additional features, click "No thanks, just start my download." Accept all default settings. When prompted to enter a password for the root user enter “Portfol.io2023”
 3. Open the root directory of the repository and call `python project_setup.py` from the terminal.
